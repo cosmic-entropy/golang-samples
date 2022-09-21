@@ -336,6 +336,7 @@ var (
 		(*SampleData)(nil),   // 1: exampleproto.SampleData
 	}
 )
+
 var file_sample_data_proto_depIdxs = []int32{
 	0, // 0: exampleproto.SampleData.struct_col:type_name -> exampleproto.SampleStruct
 	0, // 1: exampleproto.SampleData.struct_list:type_name -> exampleproto.SampleStruct

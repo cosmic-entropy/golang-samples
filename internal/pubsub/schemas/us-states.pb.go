@@ -125,6 +125,7 @@ var (
 		(*State)(nil), // 0: utilities.State
 	}
 )
+
 var file_us_states_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
 	0, // [0:0] is the sub-list for method input_type
