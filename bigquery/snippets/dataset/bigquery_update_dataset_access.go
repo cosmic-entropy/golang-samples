@@ -44,7 +44,8 @@ func updateDatasetAccessControl(projectID, datasetID string) error {
 		Access: append(meta.Access, &bigquery.AccessEntry{
 			Role:       bigquery.ReaderRole,
 			EntityType: bigquery.UserEmailEntity,
-			Entity:     "sample.bigquery.dev@gmail.com"},
+			Entity:     "sample.bigquery.dev@gmail.com",
+		},
 		),
 	}
 

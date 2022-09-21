@@ -33,7 +33,7 @@ func queryWithString(w io.Writer, db string) error {
 	}
 	defer client.Close()
 
-	var exampleString = "Venue 42"
+	exampleString := "Venue 42"
 	stmt := spanner.Statement{
 		SQL: `SELECT VenueId, VenueName FROM Venues
             	WHERE VenueName = @venueName`,

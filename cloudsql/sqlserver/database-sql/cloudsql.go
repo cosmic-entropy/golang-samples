@@ -255,7 +255,6 @@ func saveVote(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	insertVote := "INSERT INTO votes (candidate, created_at) VALUES (@TEAM, GETDATE())"
 	_, err := db.Exec(insertVote, sql.Named("TEAM", team))
 	// [END cloud_sql_sqlserver_databasesql_connection]
-
 	if err != nil {
 		log.Printf("saveVote: unable to save vote: %v", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

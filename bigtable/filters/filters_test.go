@@ -322,7 +322,8 @@ Column Family stats_summary
 			want: fmt.Sprintf(
 				`Reading data for phone#4c410523#20190501:
 Column Family cell_plan
-	data_plan_01gb: true @%d`, timestampMinusHr)},
+	data_plan_01gb: true @%d`, timestampMinusHr),
+		},
 		{
 			name:   "filterLimitBlockAll",
 			filter: filterLimitBlockAll,
@@ -560,7 +561,6 @@ Column Family stats_summary
 }
 
 func writeTestData(err error, ctx context.Context, project string, instance string, tableName string, timestamp bigtable.Timestamp, t *testing.T) {
-
 	client, err := bigtable.NewClient(ctx, project, instance)
 	tbl := client.Open(tableName)
 	timestampMinusHr := timestamp - 60*60*1000*1000

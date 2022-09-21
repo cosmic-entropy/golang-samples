@@ -42,7 +42,7 @@ func queryWithArrayOfStruct(w io.Writer, db string) error {
 
 	// [START spanner_create_array_of_struct_with_data]
 
-	var bandMembers = []nameType{
+	bandMembers := []nameType{
 		{"Elena", "Campbell"},
 		{"Gabriel", "Wright"},
 		{"Benjamin", "Martinez"},

@@ -32,9 +32,11 @@ import (
 	cloudiot "google.golang.org/api/cloudiot/v1"
 )
 
-var privateKeyRSA = os.Getenv("GOLANG_SAMPLES_IOT_PRIV")
-var pubKeyRSA = os.Getenv("GOLANG_SAMPLES_IOT_PUB")
-var region = "us-central1"
+var (
+	privateKeyRSA = os.Getenv("GOLANG_SAMPLES_IOT_PRIV")
+	pubKeyRSA     = os.Getenv("GOLANG_SAMPLES_IOT_PUB")
+	region        = "us-central1"
+)
 
 // createID returns a v1 UUID for a resource: e.g. topic, registry, gateway, device
 func createID(resource string) string {
@@ -211,7 +213,6 @@ func bindDeviceToGateway(w io.Writer, projectID string, region string, registryI
 	}
 
 	response, err := client.Projects.Locations.Registries.BindDeviceToGateway(parent, bindRequest).Do()
-
 	if err != nil {
 		return nil, fmt.Errorf("BindDeviceToGateway: %v", err)
 	}
@@ -239,7 +240,6 @@ func unbindDeviceFromGateway(w io.Writer, projectID string, region string, regis
 	}
 
 	response, err := client.Projects.Locations.Registries.UnbindDeviceFromGateway(parent, unbindRequest).Do()
-
 	if err != nil {
 		return nil, fmt.Errorf("UnbindDeviceFromGateway error: %v", err)
 	}

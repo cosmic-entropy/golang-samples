@@ -58,5 +58,4 @@ func TestConfigureRetries(t *testing.T) {
 	if got, want := buf.String(), "deleted with a customized retry"; !strings.Contains(got, want) {
 		t.Errorf("configureRetries: got %q; want to contain %q", got, want)
 	}
-
 }

@@ -34,7 +34,6 @@ func TestIntentManagement(t *testing.T) {
 	intentDisplayNames := [...]string{fmt.Sprintf("intent-%s", time.Now()), fmt.Sprintf("intent-%s", time.Now())}
 
 	initialIntents, err := ListIntents(projectID)
-
 	if err != nil {
 		t.Error("Unsuccessful initial ListIntents")
 	}
@@ -49,7 +48,6 @@ func TestIntentManagement(t *testing.T) {
 	}
 
 	intermediateIntents, err := ListIntents(projectID)
-
 	if err != nil {
 		t.Error("Unsuccessful intermediate ListIntents")
 	}
@@ -77,7 +75,6 @@ func TestIntentManagement(t *testing.T) {
 	}
 
 	finalIntents, err := ListIntents(projectID)
-
 	if err != nil {
 		t.Error("Unsuccessful final ListIntents")
 	}

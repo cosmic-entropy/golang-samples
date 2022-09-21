@@ -80,6 +80,7 @@ func TestListen(t *testing.T) {
 		t.Errorf("listenDocument: %v", err)
 	}
 }
+
 func TestListenMultiple(t *testing.T) {
 	ctx := context.Background()
 	client, projectID, collection := setup(ctx, t)

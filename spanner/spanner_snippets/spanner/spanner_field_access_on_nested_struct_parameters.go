@@ -42,7 +42,7 @@ func queryWithNestedStructField(w io.Writer, db string) error {
 		SongName    string
 		ArtistNames []nameType
 	}
-	var songInfo = songInfoStruct{
+	songInfo := songInfoStruct{
 		SongName: "Imagination",
 		ArtistNames: []nameType{
 			{FirstName: "Elena", LastName: "Campbell"},

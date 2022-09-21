@@ -31,7 +31,6 @@ func createNotificationConfig(w io.Writer, orgID string, pubsubTopic string, not
 
 	ctx := context.Background()
 	client, err := securitycenter.NewClient(ctx)
-
 	if err != nil {
 		return fmt.Errorf("securitycenter.NewClient: %v", err)
 	}

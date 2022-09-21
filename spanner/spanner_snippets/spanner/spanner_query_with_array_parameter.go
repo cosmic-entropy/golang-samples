@@ -35,9 +35,9 @@ func queryWithArray(w io.Writer, db string) error {
 	}
 	defer client.Close()
 
-	var date1 = civil.Date{Year: 2020, Month: time.October, Day: 1}
-	var date2 = civil.Date{Year: 2020, Month: time.November, Day: 1}
-	var exampleArray = []civil.Date{date1, date2}
+	date1 := civil.Date{Year: 2020, Month: time.October, Day: 1}
+	date2 := civil.Date{Year: 2020, Month: time.November, Day: 1}
+	exampleArray := []civil.Date{date1, date2}
 	stmt := spanner.Statement{
 		SQL: `SELECT VenueId, VenueName, AvailableDate FROM Venues v,
             	UNNEST(v.AvailableDates) as AvailableDate 

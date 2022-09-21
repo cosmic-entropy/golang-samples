@@ -37,9 +37,7 @@ const (
 	signName = "sign.png"
 )
 
-var (
-	imageBucketName string
-)
+var imageBucketName string
 
 func setupTests(t *testing.T) {
 	ctx := context.Background()

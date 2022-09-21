@@ -66,7 +66,6 @@ func init() {
 // kgSearch uses the Knowledge Graph API to search for a query provided
 // by a Slack command.
 func kgSearch(w http.ResponseWriter, r *http.Request) {
-
 	bodyBytes, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Printf("failed to read body: %v", err)
@@ -149,7 +148,6 @@ func verifyWebHook(r *http.Request, body []byte, slackSigningSecret string) (boo
 
 	trimmed := strings.TrimPrefix(slackSignature, fmt.Sprintf("%s=", version))
 	signatureInHeader, err := hex.DecodeString(trimmed)
-
 	if err != nil {
 		return false, fmt.Errorf("hex.DecodeString(%v): %v", trimmed, err)
 	}

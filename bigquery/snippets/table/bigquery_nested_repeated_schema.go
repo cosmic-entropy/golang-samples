@@ -42,7 +42,8 @@ func createTableComplexSchema(w io.Writer, projectID, datasetID, tableID string)
 		{Name: "first_name", Type: bigquery.StringFieldType},
 		{Name: "last_name", Type: bigquery.StringFieldType},
 		{Name: "dob", Type: bigquery.DateFieldType},
-		{Name: "addresses",
+		{
+			Name:     "addresses",
 			Type:     bigquery.RecordFieldType,
 			Repeated: true,
 			Schema: bigquery.Schema{
@@ -52,7 +53,8 @@ func createTableComplexSchema(w io.Writer, projectID, datasetID, tableID string)
 				{Name: "state", Type: bigquery.StringFieldType},
 				{Name: "zip", Type: bigquery.StringFieldType},
 				{Name: "numberOfYears", Type: bigquery.StringFieldType},
-			}},
+			},
+		},
 	}
 
 	metaData := &bigquery.TableMetadata{

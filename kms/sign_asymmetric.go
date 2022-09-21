@@ -55,7 +55,6 @@ func signAsymmetric(w io.Writer, name string, message string) error {
 	crc32c := func(data []byte) uint32 {
 		t := crc32.MakeTable(crc32.Castagnoli)
 		return crc32.Checksum(data, t)
-
 	}
 	digestCRC32C := crc32c(digest.Sum(nil))
 

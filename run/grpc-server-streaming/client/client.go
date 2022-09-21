@@ -79,7 +79,8 @@ func streamTime(client pb.TimeServiceClient, duration uint) error {
 	ctx := context.Background()
 
 	resp, err := client.StreamTime(ctx, &pb.Request{
-		DurationSecs: uint32(duration)})
+		DurationSecs: uint32(duration),
+	})
 	if err != nil {
 		return fmt.Errorf("StreamTime rpc failed: %w", err)
 	}

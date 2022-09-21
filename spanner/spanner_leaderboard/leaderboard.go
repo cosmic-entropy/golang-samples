@@ -35,11 +35,13 @@ import (
 	adminpb "google.golang.org/genproto/googleapis/spanner/admin/database/v1"
 )
 
-type command func(ctx context.Context, w io.Writer, client *spanner.Client) error
-type uniqueRand struct {
-	used map[int64]bool
-	rand *rand.Rand
-}
+type (
+	command    func(ctx context.Context, w io.Writer, client *spanner.Client) error
+	uniqueRand struct {
+		used map[int64]bool
+		rand *rand.Rand
+	}
+)
 
 func newUniqueRand() uniqueRand {
 	return uniqueRand{
@@ -58,13 +60,11 @@ func (r *uniqueRand) rnd(min, max int64) int64 {
 	}
 }
 
-var (
-	commands = map[string]command{
-		"insertplayers": insertPlayers,
-		"insertscores":  insertScores,
-		"query":         query,
-	}
-)
+var commands = map[string]command{
+	"insertplayers": insertPlayers,
+	"insertscores":  insertScores,
+	"query":         query,
+}
 
 func createDatabase(ctx context.Context, w io.Writer, adminClient *database.DatabaseAdminClient, db string) error {
 	matches := regexp.MustCompile("^(.*)/databases/(.*)$").FindStringSubmatch(db)
@@ -216,7 +216,8 @@ func query(ctx context.Context, w io.Writer, client *spanner.Client) error {
 		SQL: `SELECT p.PlayerId, p.PlayerName, s.Score, s.Timestamp
 		        FROM Players p
 		        JOIN Scores s ON p.PlayerId = s.PlayerId
-		        ORDER BY s.Score DESC LIMIT 10`}
+		        ORDER BY s.Score DESC LIMIT 10`,
+	}
 	iter := client.Single().Query(ctx, stmt)
 	defer iter.Stop()
 	for {
@@ -306,7 +307,8 @@ func createClients(ctx context.Context, db string) (*database.DatabaseAdminClien
 }
 
 func run(ctx context.Context, adminClient *database.DatabaseAdminClient, dataClient *spanner.Client, w io.Writer,
-	cmd string, db string, timespan int) error {
+	cmd string, db string, timespan int,
+) error {
 	// createdatabase command
 	if cmd == "createdatabase" {
 		err := createDatabase(ctx, w, adminClient, db)

@@ -51,7 +51,6 @@ func TestMain(t *testing.T) {
 
 	testutil.Retry(t, 5, 10*time.Second, func(r *testutil.R) {
 		stdOut, stdErr, err := m.Run(env, 2*time.Minute, fmt.Sprintf("--scope=%s", scope), fmt.Sprintf("--fullResourceName=%s", fullResourceName), fmt.Sprintf("--dataset=%s", dataset), fmt.Sprintf("--tablePrefix=%s", tablePrefix))
-
 		if err != nil {
 			r.Errorf("execution failed: %v", err)
 			return

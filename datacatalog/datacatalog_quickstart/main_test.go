@@ -119,7 +119,6 @@ func createTestTable(ctx context.Context, projectID string) (string, func(), err
 	}
 
 	return fmt.Sprintf("%s.%s.%s", projectID, datasetID, tableID), cleanup, nil
-
 }
 
 // cleanupDataCatalog examines the output of the quickstart, and removes created resources.

@@ -35,7 +35,8 @@ func (service MockMessageService) GetMessages(userTo string) ([]Message, error) 
 
 // Saves messages to app memory
 func (service MockMessageService) SendMessage(userFrom, userTo,
-	text string) error {
+	text string,
+) error {
 	log.Printf("MockMicroservice.SendMessage, Message: %s\n", text)
 	message := Message{
 		User:   userFrom,

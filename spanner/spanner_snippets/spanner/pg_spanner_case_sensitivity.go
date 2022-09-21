@@ -55,7 +55,8 @@ func pgCaseSensitivity(w io.Writer, db string) error {
 				-- references any of these columns must use double quotes.
 				"FirstName" varchar(1024) NOT NULL,
 				"LastName"  varchar(1024) NOT NULL
-			)`},
+			)`,
+		},
 	}
 	op, err := adminClient.UpdateDatabaseDdl(ctx, req)
 	if err != nil {
@@ -118,7 +119,8 @@ func pgCaseSensitivity(w io.Writer, db string) error {
 	iterWithAliases := client.Single().Query(ctx, spanner.Statement{
 		SQL: `SELECT singerid AS "SingerId",
 				     concat("FirstName", ' '::varchar, "LastName") AS "FullName"
-			  FROM Singers`})
+			  FROM Singers`,
+	})
 	defer iterWithAliases.Stop()
 	for {
 		row, err := iterWithAliases.Next()

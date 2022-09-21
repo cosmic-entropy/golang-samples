@@ -31,21 +31,30 @@ func writeDatatypesData(w io.Writer, db string) error {
 	}
 	defer client.Close()
 
-	venueColumns := []string{"VenueId", "VenueName", "VenueInfo", "Capacity", "AvailableDates",
-		"LastContactDate", "OutdoorVenue", "PopularityScore", "LastUpdateTime"}
+	venueColumns := []string{
+		"VenueId", "VenueName", "VenueInfo", "Capacity", "AvailableDates",
+		"LastContactDate", "OutdoorVenue", "PopularityScore", "LastUpdateTime",
+	}
 	m := []*spanner.Mutation{
 		spanner.InsertOrUpdate("Venues", venueColumns,
-			[]interface{}{4, "Venue 4", []byte("Hello World 1"), 1800,
+			[]interface{}{
+				4, "Venue 4", []byte("Hello World 1"), 1800,
 				[]string{"2020-12-01", "2020-12-02", "2020-12-03"},
-				"2018-09-02", false, 0.85543, spanner.CommitTimestamp}),
+				"2018-09-02", false, 0.85543, spanner.CommitTimestamp,
+			}),
 		spanner.InsertOrUpdate("Venues", venueColumns,
-			[]interface{}{19, "Venue 19", []byte("Hello World 2"), 6300,
+			[]interface{}{
+				19, "Venue 19", []byte("Hello World 2"), 6300,
 				[]string{"2020-11-01", "2020-11-05", "2020-11-15"},
-				"2019-01-15", true, 0.98716, spanner.CommitTimestamp}),
+				"2019-01-15", true, 0.98716, spanner.CommitTimestamp,
+			}),
 		spanner.InsertOrUpdate("Venues", venueColumns,
-			[]interface{}{42, "Venue 42", []byte("Hello World 3"), 3000,
-				[]string{"2020-10-01", "2020-10-07"}, "2018-10-01",
-				false, 0.72598, spanner.CommitTimestamp}),
+			[]interface{}{
+				42, "Venue 42", []byte("Hello World 3"), 3000,
+				[]string{"2020-10-01", "2020-10-07"},
+				"2018-10-01",
+				false, 0.72598, spanner.CommitTimestamp,
+			}),
 	}
 	_, err = client.Apply(ctx, m)
 	return err

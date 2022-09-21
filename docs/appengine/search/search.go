@@ -157,5 +157,4 @@ func sample() {
 	// search for documents with pianos that cost less than $5000
 	index.Search(ctx, "Product = piano AND Price < 5000", nil)
 	// [END queries_3]
-
 }

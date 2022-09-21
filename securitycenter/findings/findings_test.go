@@ -29,10 +29,12 @@ import (
 	securitycenterpb "google.golang.org/genproto/googleapis/cloud/securitycenter/v1"
 )
 
-var orgID = ""
-var sourceName = ""
-var findingName = ""
-var untouchedFindingName = ""
+var (
+	orgID                = ""
+	sourceName           = ""
+	findingName          = ""
+	untouchedFindingName = ""
+)
 
 func createTestFinding(ctx context.Context, client *securitycenter.Client, findingID string, category string) (*securitycenterpb.Finding, error) {
 	eventTime, err := ptypes.TimestampProto(time.Now())
@@ -79,7 +81,6 @@ func setupEntities() error {
 		},
 		Parent: fmt.Sprintf("organizations/%s", orgID),
 	})
-
 	if err != nil {
 		return fmt.Errorf("CreateSource: %v", err)
 	}
@@ -123,7 +124,6 @@ func TestCreateSource(t *testing.T) {
 		buf := new(bytes.Buffer)
 
 		err := createSource(buf, orgID)
-
 		if err != nil {
 			r.Errorf("createSource(%s) had error: %v", orgID, err)
 			return
@@ -145,7 +145,6 @@ func TestGetSource(t *testing.T) {
 		buf := new(bytes.Buffer)
 
 		err := getSource(buf, sourceName)
-
 		if err != nil {
 			r.Errorf("getSource(%s) had error: %v", sourceName, err)
 			return
@@ -167,7 +166,6 @@ func TestListSources(t *testing.T) {
 		buf := new(bytes.Buffer)
 
 		err := listSources(buf, orgID)
-
 		if err != nil {
 			r.Errorf("listSource(%s) had error: %v", orgID, err)
 			return
@@ -189,7 +187,6 @@ func TestUpdateSource(t *testing.T) {
 		buf := new(bytes.Buffer)
 
 		err := updateSource(buf, sourceName)
-
 		if err != nil {
 			r.Errorf("updateSource(%s) had error: %v", sourceName, err)
 			return
@@ -205,7 +202,6 @@ func TestUpdateSource(t *testing.T) {
 		if want := "does X"; !strings.Contains(got, want) {
 			r.Errorf("updateSource(%s) got: %s want %s", sourceName, got, want)
 		}
-
 	})
 }
 
@@ -215,7 +211,6 @@ func TestCreateFinding(t *testing.T) {
 		buf := new(bytes.Buffer)
 
 		err := createFinding(buf, sourceName)
-
 		if err != nil {
 			r.Errorf("createFinding(%s) had error: %v", sourceName, err)
 			return
@@ -234,7 +229,6 @@ func TestCreateFindingWithProperties(t *testing.T) {
 		buf := new(bytes.Buffer)
 
 		err := createFindingWithProperties(buf, sourceName)
-
 		if err != nil {
 			r.Errorf("createFindingWithProperties(%s) had error: %v", sourceName, err)
 			return
@@ -260,7 +254,6 @@ func TestUpdateFindingSourceProperties(t *testing.T) {
 		buf := new(bytes.Buffer)
 
 		err := updateFindingSourceProperties(buf, findingName)
-
 		if err != nil {
 			r.Errorf("updateFindingSourceProperties(%s) had error: %v", findingName, err)
 			return
@@ -282,7 +275,6 @@ func TestSetFindingState(t *testing.T) {
 		buf := new(bytes.Buffer)
 
 		err := setFindingState(buf, findingName)
-
 		if err != nil {
 			r.Errorf("setFindingState(%s) had error: %v", findingName, err)
 			return
@@ -304,7 +296,6 @@ func TestTestIam(t *testing.T) {
 		buf := new(bytes.Buffer)
 
 		err := testIam(buf, sourceName)
-
 		if err != nil {
 			r.Errorf("testIam(%s) had error: %v", sourceName, err)
 			return
@@ -324,7 +315,6 @@ func TestListAllFindings(t *testing.T) {
 		buf := new(bytes.Buffer)
 
 		err := listFindings(buf, orgID)
-
 		if err != nil {
 			r.Errorf("listFindings(%s) had error: %v", orgID, err)
 			return
@@ -347,7 +337,6 @@ func TestListFilteredFindings(t *testing.T) {
 		buf := new(bytes.Buffer)
 
 		err := listFilteredFindings(buf, sourceName)
-
 		if err != nil {
 			r.Errorf("listFilteredFindings(%s) had error: %v", sourceName, err)
 			return
@@ -370,7 +359,6 @@ func TestListFindingsAtTime(t *testing.T) {
 		buf := new(bytes.Buffer)
 
 		err := listFindingsAtTime(buf, sourceName)
-
 		if err != nil {
 			r.Errorf("listFindingsAtTime(%s) had error: %v", sourceName, err)
 			return
@@ -381,7 +369,6 @@ func TestListFindingsAtTime(t *testing.T) {
 		if got != "" {
 			r.Errorf("listFindingsAtTime(%s) got: %s wanted empty", sourceName, got)
 		}
-
 	})
 }
 
@@ -391,7 +378,6 @@ func TestAddSecurityMarks(t *testing.T) {
 		buf := new(bytes.Buffer)
 
 		err := addSecurityMarks(buf, findingName)
-
 		if err != nil {
 			r.Errorf("addSecurityMarks(%s) adding marks had error: %v", findingName, err)
 			return
@@ -435,7 +421,6 @@ func TestListFindingsWithMarks(t *testing.T) {
 		if strings.Contains(got, findingName) {
 			r.Errorf("listFindingWithMarks(%s) got: %s didn't want %s", orgID, got, findingName)
 		}
-
 	})
 }
 
@@ -445,7 +430,6 @@ func TestGetSourceIamPolicy(t *testing.T) {
 		buf := new(bytes.Buffer)
 
 		err := getSourceIamPolicy(buf, sourceName)
-
 		if err != nil {
 			r.Errorf("getSourceIamPolicy(%s) had error: %v", sourceName, err)
 			return
@@ -465,7 +449,6 @@ func TestSetSourceIamPolicy(t *testing.T) {
 
 		user := "csccclienttest@gmail.com"
 		err := setSourceIamPolicy(buf, sourceName, user)
-
 		if err != nil {
 			r.Errorf("setSourceIamPolicy(%s, %s) had error: %v", sourceName, user, err)
 			return

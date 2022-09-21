@@ -131,7 +131,6 @@ func TestBookDetail(t *testing.T) {
 			bodyContains(t, wt, "/", "No books found")
 		})
 	}
-
 }
 
 func TestEditBook(t *testing.T) {

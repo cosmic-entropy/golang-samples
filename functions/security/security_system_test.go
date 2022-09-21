@@ -24,8 +24,10 @@ import (
 	"testing"
 )
 
-const RuntimeVersion = "go113"
-const FunctionsRegion = "us-central1"
+const (
+	RuntimeVersion  = "go113"
+	FunctionsRegion = "us-central1"
+)
 
 func TestMain(m *testing.M) {
 	// Only run end-to-end tests when configured to do so.

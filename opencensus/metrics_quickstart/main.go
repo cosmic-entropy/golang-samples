@@ -30,10 +30,8 @@ import (
 	"golang.org/x/exp/rand"
 )
 
-var (
-	// The task latency in milliseconds.
-	latencyMs = stats.Float64("task_latency", "The task latency in milliseconds", "ms")
-)
+// The task latency in milliseconds.
+var latencyMs = stats.Float64("task_latency", "The task latency in milliseconds", "ms")
 
 func main() {
 	ctx := context.Background()

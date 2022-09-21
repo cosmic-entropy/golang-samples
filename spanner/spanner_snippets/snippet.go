@@ -33,8 +33,10 @@ import (
 	adminpb "google.golang.org/genproto/googleapis/spanner/admin/database/v1"
 )
 
-type command func(ctx context.Context, w io.Writer, client *spanner.Client) error
-type adminCommand func(ctx context.Context, w io.Writer, adminClient *database.DatabaseAdminClient, database string) error
+type (
+	command      func(ctx context.Context, w io.Writer, client *spanner.Client) error
+	adminCommand func(ctx context.Context, w io.Writer, adminClient *database.DatabaseAdminClient, database string) error
+)
 
 var (
 	commands = map[string]command{

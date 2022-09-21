@@ -39,8 +39,10 @@ func NewServer() ShakespeareServiceServer {
 	return &server{}
 }
 
-const bucketName = "dataflow-samples"
-const bucketPrefix = "shakespeare/"
+const (
+	bucketName   = "dataflow-samples"
+	bucketPrefix = "shakespeare/"
+)
 
 // GetMatchCount implements a server for ShakespeareService.
 func (s *server) GetMatchCount(ctx context.Context, req *ShakespeareRequest) (*ShakespeareResponse, error) {

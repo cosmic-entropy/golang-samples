@@ -32,7 +32,6 @@ import (
 )
 
 func main() {
-
 	// Define two command line flags for controlling the behavior of this quickstart.
 	projectID := flag.String("project_id", "", "Cloud Project ID, used for session creation.")
 	location := flag.String("location", "US", "BigQuery location used for interactions.")

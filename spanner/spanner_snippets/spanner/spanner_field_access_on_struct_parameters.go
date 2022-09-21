@@ -38,7 +38,7 @@ func queryWithStructField(w io.Writer, db string) error {
 		FirstName string
 		LastName  string
 	}
-	var singerInfo = structParam{"Elena", "Campbell"}
+	singerInfo := structParam{"Elena", "Campbell"}
 	stmt := spanner.Statement{
 		SQL: `SELECT SingerId FROM SINGERS
 			WHERE FirstName = @name.FirstName`,

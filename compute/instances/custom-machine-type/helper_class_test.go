@@ -22,7 +22,7 @@ import (
 func TestCustomMachineTypeSnippets(t *testing.T) {
 	zone := "europe-central2-b"
 
-	var customMachineTypeTests = []struct {
+	customMachineTypeTests := []struct {
 		cpuSeries string
 		memory    int
 		cpu       int

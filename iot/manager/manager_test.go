@@ -132,7 +132,6 @@ func TestCreateRegistry(t *testing.T) {
 		}
 
 		deleteRegistry(ioutil.Discard, projectID, region, testRegistryID)
-
 	})
 }
 
@@ -366,6 +365,7 @@ func TestUnbindDeviceFromGateway(t *testing.T) {
 		deleteDevice(ioutil.Discard, projectID, region, registryID, gatewayID)
 	})
 }
+
 func TestListDevicesForGateway(t *testing.T) {
 	if pubKeyRSA == "" {
 		t.Skip("GOLANG_SAMPLES_IOT_PUB not set")

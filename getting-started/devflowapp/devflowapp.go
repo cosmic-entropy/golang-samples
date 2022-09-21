@@ -81,7 +81,8 @@ func handleSend(w http.ResponseWriter, r *http.Request) {
 		User:   user,
 		Friend: friend,
 		Text:   text,
-		Id:     -1}
+		Id:     -1,
+	}
 	err := services.SendUserMessage(messageService, message)
 	if err != nil {
 		fmt.Fprintf(w, "<p>There was an error sending the message</p>\n")
@@ -93,7 +94,6 @@ func handleSend(w http.ResponseWriter, r *http.Request) {
 
 // Entry point to the application
 func main() {
-
 	http.HandleFunc("/", handleDefault)
 	http.HandleFunc("/messages", handleCheckMessages)
 	http.HandleFunc("/send", handleSend)

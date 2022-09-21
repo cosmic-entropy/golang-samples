@@ -55,7 +55,8 @@ func pgInterleavedTable(w io.Writer, db string) error {
 				AlbumId  bigint NOT NULL,
 				Title    varchar(1024) NOT NULL,
 				PRIMARY KEY (SingerId, AlbumId)
-			) INTERLEAVE IN PARENT Singers ON DELETE CASCADE`},
+			) INTERLEAVE IN PARENT Singers ON DELETE CASCADE`,
+		},
 	}
 	op, err := adminClient.UpdateDatabaseDdl(ctx, req)
 	if err != nil {

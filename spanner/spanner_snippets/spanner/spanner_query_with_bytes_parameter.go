@@ -33,7 +33,7 @@ func queryWithBytes(w io.Writer, db string) error {
 	}
 	defer client.Close()
 
-	var exampleBytes = []byte("Hello World 1")
+	exampleBytes := []byte("Hello World 1")
 	stmt := spanner.Statement{
 		SQL: `SELECT VenueId, VenueName FROM Venues
             	WHERE VenueInfo = @venueInfo`,

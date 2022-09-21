@@ -22,7 +22,6 @@ import (
 )
 
 func TestHelloGet(t *testing.T) {
-
 	req := httptest.NewRequest("GET", "/", nil)
 	req.Header.Add("Content-Type", "application/json")
 

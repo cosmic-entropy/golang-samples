@@ -30,7 +30,6 @@ func listNotificationConfigs(w io.Writer, orgID string) error {
 
 	ctx := context.Background()
 	client, err := securitycenter.NewClient(ctx)
-
 	if err != nil {
 		return fmt.Errorf("securitycenter.NewClient: %v", err)
 	}

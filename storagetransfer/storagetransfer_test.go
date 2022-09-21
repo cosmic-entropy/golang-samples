@@ -36,11 +36,13 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 )
 
-var sc *storage.Client
-var sts *storagetransfer.Client
-var s3Bucket string
-var gcsSourceBucket string
-var gcsSinkBucket string
+var (
+	sc              *storage.Client
+	sts             *storagetransfer.Client
+	s3Bucket        string
+	gcsSourceBucket string
+	gcsSinkBucket   string
+)
 
 func TestMain(m *testing.M) {
 	// Initialize global vars
@@ -79,7 +81,8 @@ func TestMain(m *testing.M) {
 
 	s3Bucket = testutil.UniqueBucketName("stss3bucket")
 	sess, err := session.NewSession(&aws.Config{
-		Region: aws.String("us-west-2")},
+		Region: aws.String("us-west-2"),
+	},
 	)
 	s3c := s3.New(sess)
 	_, err = s3c.CreateBucket(&s3.CreateBucketInput{
@@ -176,7 +179,6 @@ func TestGetLatestTransferOperation(t *testing.T) {
 	defer cleanupSTSJob(job, tc.ProjectID)
 
 	op, err := checkLatestTransferOperation(buf, tc.ProjectID, job.Name)
-
 	if err != nil {
 		t.Errorf("check_latest_transfer_operation: %#v", err)
 	}
@@ -201,7 +203,7 @@ func TestDownloadToPosix(t *testing.T) {
 	}
 	defer os.RemoveAll(rootDirectory)
 
-	sinkAgentPoolName := "" //use default agent pool
+	sinkAgentPoolName := "" // use default agent pool
 	gcsSourcePath := rootDirectory + "/"
 
 	resp, err := downloadToPosix(buf, tc.ProjectID, sinkAgentPoolName, gcsSinkBucket, gcsSourcePath, rootDirectory)
@@ -228,7 +230,7 @@ func TestTransferFromPosix(t *testing.T) {
 	}
 	defer os.RemoveAll(rootDirectory)
 
-	sourceAgentPoolName := "" //use default agent pool
+	sourceAgentPoolName := "" // use default agent pool
 
 	resp, err := transferFromPosix(buf, tc.ProjectID, sourceAgentPoolName, rootDirectory, gcsSinkBucket)
 	defer cleanupSTSJob(resp, tc.ProjectID)
@@ -260,8 +262,8 @@ func TestTransferBetweenPosix(t *testing.T) {
 	}
 	defer os.RemoveAll(destinationDirectory)
 
-	sourceAgentPoolName := "" //use default agent pool
-	sinkAgentPoolName := ""   //use default agent pool
+	sourceAgentPoolName := "" // use default agent pool
+	sinkAgentPoolName := ""   // use default agent pool
 
 	resp, err := transferBetweenPosix(buf, tc.ProjectID, sourceAgentPoolName, sinkAgentPoolName, rootDirectory, destinationDirectory, gcsSinkBucket)
 	if err != nil {
@@ -286,7 +288,7 @@ func TestTransferUsingManifest(t *testing.T) {
 	}
 	defer os.RemoveAll(rootDirectory)
 
-	sourceAgentPoolName := "" //use default agent pool
+	sourceAgentPoolName := "" // use default agent pool
 	object := sc.Bucket(gcsSourceBucket).Object("manifest.csv")
 	defer object.Delete(context.Background())
 

@@ -75,7 +75,6 @@ func createDatabaseWithDefaultLeader(w io.Writer, db string, defaultLeader strin
 	}
 	fmt.Fprintf(w, "Created database [%s] with default leader%q\n", dbObj.Name, dbObj.DefaultLeader)
 	return nil
-
 }
 
 // [END spanner_create_database_with_default_leader]

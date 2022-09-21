@@ -112,5 +112,4 @@ func TestPolicyTagManager(t *testing.T) {
 	if err := deleteTaxonomy(taxID); err != nil {
 		t.Errorf("deleteTaxonomy: %v", err)
 	}
-
 }

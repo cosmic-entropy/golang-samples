@@ -160,7 +160,6 @@ func Translate(ctx context.Context, m PubSubMessage) error {
 		}
 		return nil
 	})
-
 	if err != nil {
 		return fmt.Errorf("RunTransaction: %v", err)
 	}

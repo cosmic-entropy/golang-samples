@@ -25,7 +25,7 @@ import (
 
 func sampleHandler(w http.ResponseWriter, r *http.Request) {
 	// [START gae_blobstore_upload_form]
-	var rootTemplate = template.Must(template.New("root").Parse(rootTemplateHTML))
+	rootTemplate := template.Must(template.New("root").Parse(rootTemplateHTML))
 
 	const rootTemplateHTML = `
 <html><body>

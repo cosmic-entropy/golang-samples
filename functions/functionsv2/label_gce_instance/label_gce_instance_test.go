@@ -126,7 +126,6 @@ func TestLabelGceInstance(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
 			fake := NewFakeInstancesServer(tt.instance)
 			fakeserver := httptest.NewServer(fake)
 			defer fakeserver.Close()
@@ -159,7 +158,6 @@ func TestLabelGceInstance(t *testing.T) {
 					t.Fatalf("LabelGceInstance(%s): incorrect creator label: got %s, want %s", tt.name, newvalue, tt.newCreator)
 				}
 			}
-
 		})
 	}
 }

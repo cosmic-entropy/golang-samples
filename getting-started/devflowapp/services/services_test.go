@@ -36,7 +36,8 @@ func TestSendUserMessage(t *testing.T) {
 		User:   "Unit",
 		Friend: "Test",
 		Text:   "We mock you!",
-		Id:     1}
+		Id:     1,
+	}
 	err := SendUserMessage(messageService, message)
 	if err != nil {
 		t.Errorf("TestSendUserMessage: Got an error: %v\n", err)

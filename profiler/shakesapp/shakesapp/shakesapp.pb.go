@@ -16,8 +16,11 @@ import (
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
-var _ = fmt.Errorf
-var _ = math.Inf
+
+var (
+	_ = fmt.Errorf
+	_ = math.Inf
+)
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
@@ -43,15 +46,19 @@ func (*ShakespeareResponse) Descriptor() ([]byte, []int) {
 func (m *ShakespeareResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ShakespeareResponse.Unmarshal(m, b)
 }
+
 func (m *ShakespeareResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_ShakespeareResponse.Marshal(b, m, deterministic)
 }
+
 func (m *ShakespeareResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_ShakespeareResponse.Merge(m, src)
 }
+
 func (m *ShakespeareResponse) XXX_Size() int {
 	return xxx_messageInfo_ShakespeareResponse.Size(m)
 }
+
 func (m *ShakespeareResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_ShakespeareResponse.DiscardUnknown(m)
 }
@@ -83,15 +90,19 @@ func (*ShakespeareRequest) Descriptor() ([]byte, []int) {
 func (m *ShakespeareRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ShakespeareRequest.Unmarshal(m, b)
 }
+
 func (m *ShakespeareRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_ShakespeareRequest.Marshal(b, m, deterministic)
 }
+
 func (m *ShakespeareRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_ShakespeareRequest.Merge(m, src)
 }
+
 func (m *ShakespeareRequest) XXX_Size() int {
 	return xxx_messageInfo_ShakespeareRequest.Size(m)
 }
+
 func (m *ShakespeareRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_ShakespeareRequest.DiscardUnknown(m)
 }
@@ -167,8 +178,7 @@ type ShakespeareServiceServer interface {
 }
 
 // UnimplementedShakespeareServiceServer can be embedded to have forward compatible implementations.
-type UnimplementedShakespeareServiceServer struct {
-}
+type UnimplementedShakespeareServiceServer struct{}
 
 func (*UnimplementedShakespeareServiceServer) GetMatchCount(ctx context.Context, req *ShakespeareRequest) (*ShakespeareResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMatchCount not implemented")

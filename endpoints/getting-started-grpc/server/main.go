@@ -45,9 +45,7 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-var (
-	addr = flag.String("addr", ":50051", "Network host:port to listen on for gRPC connections.")
-)
+var addr = flag.String("addr", ":50051", "Network host:port to listen on for gRPC connections.")
 
 // server is used to implement helloworld.GreeterServer.
 type server struct {

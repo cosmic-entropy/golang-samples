@@ -58,5 +58,4 @@ func addTaskHandler(w http.ResponseWriter, r *http.Request) {
 
 	taskqueue.DeleteMulti(ctx, tasks, "pull-queue")
 	// [END deleting_tasks_1]
-
 }

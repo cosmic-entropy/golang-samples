@@ -208,5 +208,4 @@ func TestImportSnippets(t *testing.T) {
 			}
 		})
 	})
-
 }

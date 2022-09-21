@@ -35,8 +35,8 @@ func sendDataFromBoundDevice(w io.Writer, projectID string, region string, regis
 		maximumBackoffTime = 32 // maximum backoff time in seconds
 	)
 
-	var backoffTime = minimumBackoffTime
-	var shouldBackoff = false
+	backoffTime := minimumBackoffTime
+	shouldBackoff := false
 
 	// onConnect defines the on connect handler which resets backoff variables.
 	var onConnect mqtt.OnConnectHandler = func(client mqtt.Client) {

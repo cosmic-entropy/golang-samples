@@ -18,11 +18,10 @@ package snippets
 // [START texttospeech_audio_profile]
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"io/ioutil"
-
-	"context"
 
 	texttospeech "cloud.google.com/go/texttospeech/apiv1"
 	texttospeechpb "google.golang.org/genproto/googleapis/cloud/texttospeech/v1"

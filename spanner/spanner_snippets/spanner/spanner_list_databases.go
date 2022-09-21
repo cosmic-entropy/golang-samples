@@ -52,7 +52,6 @@ func listDatabases(w io.Writer, instanceId string) error {
 	}
 
 	return nil
-
 }
 
 // [END spanner_list_databases]

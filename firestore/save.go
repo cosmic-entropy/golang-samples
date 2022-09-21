@@ -64,7 +64,7 @@ func addDocDataTypes(ctx context.Context, client *firestore.Client) error {
 }
 
 func addDocWithID(ctx context.Context, client *firestore.Client) error {
-	var data = make(map[string]interface{})
+	data := make(map[string]interface{})
 	// [START firestore_data_set_id_specified]
 	_, err := client.Collection("cities").Doc("new-city-id").Set(ctx, data)
 	if err != nil {
@@ -151,7 +151,6 @@ func updateDocCreateIfMissing(ctx context.Context, client *firestore.Client) err
 	_, err := client.Collection("cities").Doc("BJ").Set(ctx, map[string]interface{}{
 		"capital": true,
 	}, firestore.MergeAll)
-
 	if err != nil {
 		// Handle any errors in an appropriate way, such as returning them.
 		log.Printf("An error has occurred: %s", err)
@@ -269,8 +268,8 @@ func deleteField(ctx context.Context, client *firestore.Client) error {
 
 // [START firestore_data_delete_collection]
 func deleteCollection(ctx context.Context, client *firestore.Client,
-	ref *firestore.CollectionRef, batchSize int) error {
-
+	ref *firestore.CollectionRef, batchSize int,
+) error {
 	for {
 		// Get a batch of documents
 		iter := ref.Limit(batchSize).Documents(ctx)

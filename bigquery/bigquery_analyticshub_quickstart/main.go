@@ -31,7 +31,6 @@ import (
 )
 
 func main() {
-
 	// Define the command line flags for controlling the behavior of this quickstart.
 	var (
 		projectID            = flag.String("project_id", "", "Cloud Project ID, used for session creation.")

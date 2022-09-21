@@ -42,7 +42,6 @@ func TestQuickstart(t *testing.T) {
 		"--project_id", tc.ProjectID,
 		"--member_id", testMember,
 	)
-
 	if err != nil {
 		t.Errorf("stdout: %v", string(stdOut))
 		t.Errorf("stderr: %v", string(stdErr))
@@ -55,7 +54,6 @@ func TestQuickstart(t *testing.T) {
 
 	// delete the service account used in the test
 	deleteServiceAccount(testServiceAccount.Email)
-
 }
 
 // createServiceAccount creates a service account.

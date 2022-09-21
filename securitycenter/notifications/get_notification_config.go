@@ -30,7 +30,6 @@ func getNotificationConfig(w io.Writer, orgID string, notificationConfigID strin
 
 	ctx := context.Background()
 	client, err := securitycenter.NewClient(ctx)
-
 	if err != nil {
 		return fmt.Errorf("securitycenter.NewClient: %v", err)
 	}

@@ -62,12 +62,10 @@ func main() {
 
 	// Removes member from the "Log writer" role
 	removeMember(crmService, *projectID, *member, role)
-
 }
 
 // addBinding adds the member to the project's IAM policy
 func addBinding(crmService *cloudresourcemanager.Service, projectID, member, role string) {
-
 	policy := getPolicy(crmService, projectID)
 
 	// Find the policy binding for role. Only one binding can have the role.
@@ -92,12 +90,10 @@ func addBinding(crmService *cloudresourcemanager.Service, projectID, member, rol
 	}
 
 	setPolicy(crmService, projectID, policy)
-
 }
 
 // removeMember removes the member from the project's IAM policy
 func removeMember(crmService *cloudresourcemanager.Service, projectID, member, role string) {
-
 	policy := getPolicy(crmService, projectID)
 
 	// Find the policy binding for role. Only one binding can have the role.
@@ -132,12 +128,10 @@ func removeMember(crmService *cloudresourcemanager.Service, projectID, member, r
 	}
 
 	setPolicy(crmService, projectID, policy)
-
 }
 
 // getPolicy gets the project's IAM policy
 func getPolicy(crmService *cloudresourcemanager.Service, projectID string) *cloudresourcemanager.Policy {
-
 	ctx := context.Background()
 
 	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
@@ -153,7 +147,6 @@ func getPolicy(crmService *cloudresourcemanager.Service, projectID string) *clou
 
 // setPolicy sets the project's IAM policy
 func setPolicy(crmService *cloudresourcemanager.Service, projectID string, policy *cloudresourcemanager.Policy) {
-
 	ctx := context.Background()
 
 	ctx, cancel := context.WithTimeout(ctx, time.Second*10)

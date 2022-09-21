@@ -21,13 +21,17 @@ import (
 	"google.golang.org/appengine/datastore"
 )
 
-var err error
-var ctx context.Context
-var k1, k2, k3 *datastore.Key
-var e1, e2, e3 interface{}
+var (
+	err        error
+	ctx        context.Context
+	k1, k2, k3 *datastore.Key
+	e1, e2, e3 interface{}
+)
 
-type T struct{}
-type Address struct{}
+type (
+	T       struct{}
+	Address struct{}
+)
 
 func example() {
 	// [START batch]
@@ -35,7 +39,7 @@ func example() {
 	_, err = datastore.PutMulti(ctx, []*datastore.Key{k1, k2, k3}, []interface{}{e1, e2, e3})
 
 	// A batch get.
-	var entities = make([]*T, 3)
+	entities := make([]*T, 3)
 	err = datastore.GetMulti(ctx, []*datastore.Key{k1, k2, k3}, entities)
 
 	// A batch delete.

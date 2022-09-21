@@ -119,10 +119,12 @@ func file_us_states_proto_rawDescGZIP() []byte {
 	return file_us_states_proto_rawDescData
 }
 
-var file_us_states_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_us_states_proto_goTypes = []interface{}{
-	(*State)(nil), // 0: utilities.State
-}
+var (
+	file_us_states_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+	file_us_states_proto_goTypes  = []interface{}{
+		(*State)(nil), // 0: utilities.State
+	}
+)
 var file_us_states_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
 	0, // [0:0] is the sub-list for method input_type

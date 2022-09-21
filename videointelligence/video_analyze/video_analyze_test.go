@@ -24,8 +24,10 @@ import (
 	"github.com/GoogleCloudPlatform/golang-samples/internal/testutil"
 )
 
-const catVideo = "gs://cloud-samples-data/video/cat.mp4"
-const googleworkVideo = "gs://python-docs-samples-tests/video/googlework_short.mp4"
+const (
+	catVideo        = "gs://cloud-samples-data/video/cat.mp4"
+	googleworkVideo = "gs://python-docs-samples-tests/video/googlework_short.mp4"
+)
 
 func TestAnalyze(t *testing.T) {
 	testutil.EndToEndTest(t)

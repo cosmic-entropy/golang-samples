@@ -36,7 +36,8 @@ func queryWithTimestamp(w io.Writer, db string) error {
 
 	stmt := spanner.Statement{
 		SQL: `SELECT SingerId, AlbumId, MarketingBudget, LastUpdateTime
-				FROM Albums ORDER BY LastUpdateTime DESC`}
+				FROM Albums ORDER BY LastUpdateTime DESC`,
+	}
 	iter := client.Single().Query(ctx, stmt)
 	defer iter.Stop()
 	for {

@@ -65,8 +65,7 @@ func TestBigtableRead(t *testing.T) {
 	rr := httptest.NewRecorder()
 	BigtableRead(rr, req)
 
-	want :=
-		`Rowkey: phone#4c410523#20190501, os_build:  PQ2A.190405.003
+	want := `Rowkey: phone#4c410523#20190501, os_build:  PQ2A.190405.003
 Rowkey: phone#4c410523#20190502, os_build:  PQ2A.190405.004
 Rowkey: phone#4c410523#20190505, os_build:  PQ2A.190406.000
 Rowkey: phone#5c10102#20190501, os_build:  PQ2A.190401.002
@@ -83,7 +82,6 @@ Rowkey: phone#5c10102#20190502, os_build:  PQ2A.190406.000`
 }
 
 func writeTestData(ctx context.Context, project string, instance string, tableID string, timestamp bigtable.Timestamp, t *testing.T) {
-
 	client, _ := bigtable.NewClient(ctx, project, instance)
 	tbl := client.Open(tableID)
 

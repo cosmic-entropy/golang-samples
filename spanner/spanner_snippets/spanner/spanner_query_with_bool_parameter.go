@@ -33,7 +33,7 @@ func queryWithBool(w io.Writer, db string) error {
 	}
 	defer client.Close()
 
-	var exampleBool = true
+	exampleBool := true
 	stmt := spanner.Statement{
 		SQL: `SELECT VenueId, VenueName, OutdoorVenue FROM Venues
             	WHERE OutdoorVenue = @outdoorVenue`,

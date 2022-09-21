@@ -59,7 +59,7 @@ func connectTCPSocket() (*sql.DB, error) {
 	// connection is encrypted.
 	if dbRootCert, ok := os.LookupEnv("DB_ROOT_CERT"); ok { // e.g., '/path/to/my/server-ca.pem'
 		// Get connection host name to be matched with host name in SSL certificate.
-		var instanceConnectionName = mustGetenv("INSTANCE_CONNECTION_NAME")
+		instanceConnectionName := mustGetenv("INSTANCE_CONNECTION_NAME")
 		// Expected format of INSTANCE_CONNECTION_NAME is project_id:region:instance_name
 		hostNameParts := strings.Split(instanceConnectionName, ":")
 		if len(hostNameParts) != 3 {

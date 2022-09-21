@@ -107,5 +107,4 @@ func TestDatasets(t *testing.T) {
 	if err := listDatasets(tc.ProjectID, ioutil.Discard); err != nil {
 		t.Errorf("listDatasets: %v", err)
 	}
-
 }

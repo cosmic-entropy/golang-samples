@@ -44,14 +44,14 @@ func makeAuditLog(subject string, payload AuditLogProtoPayload) (event.Event, er
 }
 
 func TestHelloAuditLog(t *testing.T) {
-
 	tests := []struct {
 		name         string
 		subject      string
 		payload      AuditLogProtoPayload
 		expectedLogs []string
 	}{
-		{name: "sample-output",
+		{
+			name:    "sample-output",
 			subject: "storage.googleapis.com/projects/_/buckets/my-bucket/objects/test.txt",
 			payload: AuditLogProtoPayload{
 				MethodName:   "storage.objects.create",
@@ -100,7 +100,6 @@ func TestHelloAuditLog(t *testing.T) {
 					t.Errorf("HelloAuditlog() expected log not found: expected '%s', got '%s'", l, output)
 				}
 			}
-
 		})
 
 	}

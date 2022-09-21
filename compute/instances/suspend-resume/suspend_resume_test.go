@@ -166,5 +166,4 @@ func TestSuspendResumeSnippets(t *testing.T) {
 	if err != nil {
 		t.Errorf("deleteInstance got err: %v", err)
 	}
-
 }

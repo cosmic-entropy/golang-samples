@@ -57,7 +57,8 @@ func main() {
 	projectNumber := strconv.FormatInt(project.ProjectNumber, 10)
 	feedName := fmt.Sprintf("projects/%s/feeds/%s", projectNumber, *feedID)
 	req := &assetpb.GetFeedRequest{
-		Name: feedName}
+		Name: feedName,
+	}
 	response, err := client.GetFeed(ctx, req)
 	if err != nil {
 		log.Fatalf("client.GetFeed: %v", err)

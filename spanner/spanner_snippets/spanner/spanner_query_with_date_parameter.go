@@ -35,7 +35,7 @@ func queryWithDate(w io.Writer, db string) error {
 	}
 	defer client.Close()
 
-	var exampleDate = civil.Date{Year: 2019, Month: time.January, Day: 1}
+	exampleDate := civil.Date{Year: 2019, Month: time.January, Day: 1}
 	stmt := spanner.Statement{
 		SQL: `SELECT VenueId, VenueName, LastContactDate FROM Venues
             	WHERE LastContactDate < @lastContactDate`,

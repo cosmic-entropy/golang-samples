@@ -36,7 +36,8 @@ func queryWithHistory(w io.Writer, db string) error {
 		SQL: `SELECT d.UserId, d.DocumentId, d.Contents, dh.Timestamp, dh.PreviousContents
 				FROM Documents d JOIN DocumentHistory dh
 				ON dh.UserId = d.UserId AND dh.DocumentId = d.DocumentId
-				ORDER BY dh.Timestamp DESC LIMIT 3`}
+				ORDER BY dh.Timestamp DESC LIMIT 3`,
+	}
 	iter := client.Single().Query(ctx, stmt)
 	defer iter.Stop()
 	for {

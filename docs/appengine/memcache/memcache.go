@@ -58,5 +58,4 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		log.Infof(ctx, "the lyric is %q", item.Value)
 	}
 	// [END intro_2]
-
 }
