@@ -44,7 +44,6 @@ func TestMain(t *testing.T) {
 	uri := fmt.Sprintf("gs://%s/client_library_obj", bucketName)
 
 	stdOut, stdErr, err := m.Run(env, 2*time.Minute, fmt.Sprintf("--scope=%s", scope), fmt.Sprintf("--fullResourceName=%s", fullResourceName), fmt.Sprintf("--uri=%s", uri))
-
 	if err != nil {
 		t.Errorf("execution failed: %v", err)
 	}

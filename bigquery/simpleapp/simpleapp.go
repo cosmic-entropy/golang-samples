@@ -58,7 +58,6 @@ func main() {
 
 // query returns a row iterator suitable for reading query results.
 func query(ctx context.Context, client *bigquery.Client) (*bigquery.RowIterator, error) {
-
 	// [START bigquery_simple_app_query]
 	query := client.Query(
 		`SELECT

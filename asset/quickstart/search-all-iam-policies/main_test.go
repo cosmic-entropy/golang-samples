@@ -37,7 +37,6 @@ func TestMain(t *testing.T) {
 	}
 
 	stdOut, stdErr, err := m.Run(env, 2*time.Minute, fmt.Sprintf("--scope=%s", scope), fmt.Sprintf("--query=%s", query))
-
 	if err != nil {
 		t.Errorf("execution failed: %v", err)
 	}

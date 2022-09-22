@@ -68,10 +68,12 @@ func transferFromAws(w io.Writer, projectID string, awsSourceBucket string, gcsS
 						AwsAccessKey: &storagetransferpb.AwsAccessKey{
 							AccessKeyId:     awsAccessKeyID,
 							SecretAccessKey: awsSecretKey,
-						}},
+						},
+					},
 				},
 				DataSink: &storagetransferpb.TransferSpec_GcsDataSink{
-					GcsDataSink: &storagetransferpb.GcsData{BucketName: gcsSinkBucket}},
+					GcsDataSink: &storagetransferpb.GcsData{BucketName: gcsSinkBucket},
+				},
 			},
 			Schedule: &storagetransferpb.Schedule{
 				ScheduleStartDate: &date.Date{

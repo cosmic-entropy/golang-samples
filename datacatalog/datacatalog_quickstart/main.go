@@ -127,7 +127,7 @@ func createQuickstartTagTemplate(ctx context.Context, client *datacatalog.Client
 		},
 	}
 
-	//Construct the creation request using the template definition.
+	// Construct the creation request using the template definition.
 	req := &datacatalogpb.CreateTagTemplateRequest{
 		Parent:        loc,
 		TagTemplateId: "quickstart_tag_template",
@@ -139,7 +139,6 @@ func createQuickstartTagTemplate(ctx context.Context, client *datacatalog.Client
 	req.TagTemplateId = fmt.Sprintf("%s_%d", req.GetTagTemplateId(), time.Now().UnixNano())
 	// [START data_catalog_quickstart]
 	return client.CreateTagTemplate(ctx, req)
-
 }
 
 // createQuickstartTag populates tag values according to the template, and attaches

@@ -70,7 +70,8 @@ func TestMain(t *testing.T) {
 					},
 				},
 			},
-		}}
+		},
+	}
 	_, err = client.CreateFeed(ctx, req)
 	if err != nil {
 		t.Fatalf("client.CreateFeed: %v", err)

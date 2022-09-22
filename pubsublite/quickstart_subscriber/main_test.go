@@ -67,7 +67,6 @@ func TestQuickstartSubscriber(t *testing.T) {
 		"--zone", zone,
 		"--subscription_id", resourceID,
 	)
-
 	if err != nil {
 		t.Errorf("stdout: %v", string(stdOut))
 		t.Errorf("stderr: %v", string(stdErr))

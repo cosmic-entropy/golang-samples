@@ -24,8 +24,10 @@ import (
 	"google.golang.org/appengine/memcache"
 )
 
-var maxHeight int
-var minBirthYear, maxBirthYear int
+var (
+	maxHeight                  int
+	minBirthYear, maxBirthYear int
+)
 
 // [START gae_go_datastore_interface]
 type Person struct {

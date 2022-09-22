@@ -93,7 +93,6 @@ func defaultAutoComplete(w io.Writer, projectID, companyName, query string) (*ta
 	}
 
 	return resp, nil
-
 }
 
 // [END auto_complete_default]

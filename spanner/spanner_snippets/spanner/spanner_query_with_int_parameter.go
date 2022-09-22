@@ -33,7 +33,7 @@ func queryWithInt(w io.Writer, db string) error {
 	}
 	defer client.Close()
 
-	var exampleInt = 3000
+	exampleInt := 3000
 	stmt := spanner.Statement{
 		SQL: `SELECT VenueId, VenueName, Capacity FROM Venues
             	WHERE Capacity >= @capacity`,

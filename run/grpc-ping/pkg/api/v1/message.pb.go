@@ -17,8 +17,11 @@ import (
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
-var _ = fmt.Errorf
-var _ = math.Inf
+
+var (
+	_ = fmt.Errorf
+	_ = math.Inf
+)
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
@@ -43,15 +46,19 @@ func (*Request) Descriptor() ([]byte, []int) {
 func (m *Request) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Request.Unmarshal(m, b)
 }
+
 func (m *Request) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_Request.Marshal(b, m, deterministic)
 }
+
 func (m *Request) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_Request.Merge(m, src)
 }
+
 func (m *Request) XXX_Size() int {
 	return xxx_messageInfo_Request.Size(m)
 }
+
 func (m *Request) XXX_DiscardUnknown() {
 	xxx_messageInfo_Request.DiscardUnknown(m)
 }
@@ -84,15 +91,19 @@ func (*Pong) Descriptor() ([]byte, []int) {
 func (m *Pong) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Pong.Unmarshal(m, b)
 }
+
 func (m *Pong) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_Pong.Marshal(b, m, deterministic)
 }
+
 func (m *Pong) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_Pong.Merge(m, src)
 }
+
 func (m *Pong) XXX_Size() int {
 	return xxx_messageInfo_Pong.Size(m)
 }
+
 func (m *Pong) XXX_DiscardUnknown() {
 	xxx_messageInfo_Pong.DiscardUnknown(m)
 }
@@ -137,15 +148,19 @@ func (*Response) Descriptor() ([]byte, []int) {
 func (m *Response) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Response.Unmarshal(m, b)
 }
+
 func (m *Response) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_Response.Marshal(b, m, deterministic)
 }
+
 func (m *Response) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_Response.Merge(m, src)
 }
+
 func (m *Response) XXX_Size() int {
 	return xxx_messageInfo_Response.Size(m)
 }
+
 func (m *Response) XXX_DiscardUnknown() {
 	xxx_messageInfo_Response.DiscardUnknown(m)
 }
@@ -236,12 +251,12 @@ type PingServiceServer interface {
 }
 
 // UnimplementedPingServiceServer can be embedded to have forward compatible implementations.
-type UnimplementedPingServiceServer struct {
-}
+type UnimplementedPingServiceServer struct{}
 
 func (*UnimplementedPingServiceServer) Send(ctx context.Context, req *Request) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Send not implemented")
 }
+
 func (*UnimplementedPingServiceServer) SendUpstream(ctx context.Context, req *Request) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendUpstream not implemented")
 }

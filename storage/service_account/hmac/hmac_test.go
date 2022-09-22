@@ -29,8 +29,10 @@ import (
 	"cloud.google.com/go/storage"
 )
 
-var serviceAccountEmail = os.Getenv("GOLANG_SAMPLES_SERVICE_ACCOUNT_EMAIL")
-var storageClient *storage.Client
+var (
+	serviceAccountEmail = os.Getenv("GOLANG_SAMPLES_SERVICE_ACCOUNT_EMAIL")
+	storageClient       *storage.Client
+)
 
 func TestMain(m *testing.M) {
 	if serviceAccountEmail == "" {
@@ -167,7 +169,6 @@ func TestDeleteKey(t *testing.T) {
 	if key != nil && key.State != "DELETED" {
 		t.Errorf("State of key is %s, should be DELETED", key.State)
 	}
-
 }
 
 // Delete all HMAC keys in the project.

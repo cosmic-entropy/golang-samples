@@ -75,7 +75,6 @@ func queryBatch(w io.Writer, projectID, dstDatasetID, dstTableID string) error {
 	fmt.Fprintf(w, "Job %s in Location %s currently in state: %s\n", job.ID(), job.Location(), state)
 
 	return nil
-
 }
 
 // [END bigquery_query_batch]

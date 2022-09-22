@@ -58,7 +58,8 @@ func (timeService) StreamTime(req *pb.Request, resp pb.TimeService_StreamTimeSer
 
 	for time.Now().Before(finish) {
 		if err := resp.Send(&pb.TimeResponse{
-			CurrentTime: ptypes.TimestampNow()}); err != nil {
+			CurrentTime: ptypes.TimestampNow(),
+		}); err != nil {
 			return fmt.Errorf("failed to send message: %w", err)
 		}
 

@@ -329,11 +329,14 @@ func file_sample_data_proto_rawDescGZIP() []byte {
 	return file_sample_data_proto_rawDescData
 }
 
-var file_sample_data_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
-var file_sample_data_proto_goTypes = []interface{}{
-	(*SampleStruct)(nil), // 0: exampleproto.SampleStruct
-	(*SampleData)(nil),   // 1: exampleproto.SampleData
-}
+var (
+	file_sample_data_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+	file_sample_data_proto_goTypes  = []interface{}{
+		(*SampleStruct)(nil), // 0: exampleproto.SampleStruct
+		(*SampleData)(nil),   // 1: exampleproto.SampleData
+	}
+)
+
 var file_sample_data_proto_depIdxs = []int32{
 	0, // 0: exampleproto.SampleData.struct_col:type_name -> exampleproto.SampleStruct
 	0, // 1: exampleproto.SampleData.struct_list:type_name -> exampleproto.SampleStruct

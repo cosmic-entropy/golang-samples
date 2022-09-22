@@ -181,7 +181,6 @@ func main() {
 
 	// Wait until both the reading and decoding goroutines complete.
 	wg.Wait()
-
 }
 
 // printDatum prints the decoded row datum.
@@ -394,7 +393,6 @@ func processAvro(ctx context.Context, schema string, ch <-chan *bqStoragepb.Read
 			undecoded := rows.GetAvroRows().GetSerializedBinaryRows()
 			for len(undecoded) > 0 {
 				datum, remainingBytes, err := codec.NativeFromBinary(undecoded)
-
 				if err != nil {
 					if err == io.EOF {
 						break

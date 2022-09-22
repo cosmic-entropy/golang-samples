@@ -17,12 +17,11 @@ package writes
 
 // [START bigtable_writes_simple]
 import (
+	"bytes"
 	"context"
 	"encoding/binary"
 	"fmt"
 	"io"
-
-	"bytes"
 
 	"cloud.google.com/go/bigtable"
 )

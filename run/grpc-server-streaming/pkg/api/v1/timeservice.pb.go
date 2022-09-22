@@ -17,8 +17,11 @@ import (
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
-var _ = fmt.Errorf
-var _ = math.Inf
+
+var (
+	_ = fmt.Errorf
+	_ = math.Inf
+)
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
@@ -43,15 +46,19 @@ func (*Request) Descriptor() ([]byte, []int) {
 func (m *Request) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Request.Unmarshal(m, b)
 }
+
 func (m *Request) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_Request.Marshal(b, m, deterministic)
 }
+
 func (m *Request) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_Request.Merge(m, src)
 }
+
 func (m *Request) XXX_Size() int {
 	return xxx_messageInfo_Request.Size(m)
 }
+
 func (m *Request) XXX_DiscardUnknown() {
 	xxx_messageInfo_Request.DiscardUnknown(m)
 }
@@ -82,15 +89,19 @@ func (*TimeResponse) Descriptor() ([]byte, []int) {
 func (m *TimeResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_TimeResponse.Unmarshal(m, b)
 }
+
 func (m *TimeResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_TimeResponse.Marshal(b, m, deterministic)
 }
+
 func (m *TimeResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_TimeResponse.Merge(m, src)
 }
+
 func (m *TimeResponse) XXX_Size() int {
 	return xxx_messageInfo_TimeResponse.Size(m)
 }
+
 func (m *TimeResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_TimeResponse.DiscardUnknown(m)
 }
@@ -189,8 +200,7 @@ type TimeServiceServer interface {
 }
 
 // UnimplementedTimeServiceServer can be embedded to have forward compatible implementations.
-type UnimplementedTimeServiceServer struct {
-}
+type UnimplementedTimeServiceServer struct{}
 
 func (*UnimplementedTimeServiceServer) StreamTime(req *Request, srv TimeService_StreamTimeServer) error {
 	return status.Errorf(codes.Unimplemented, "method StreamTime not implemented")

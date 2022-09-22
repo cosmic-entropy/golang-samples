@@ -16,13 +16,13 @@
 package snippets
 
 import (
-	speech "cloud.google.com/go/speech/apiv1"
-	speechpb "google.golang.org/genproto/googleapis/cloud/speech/v1"
-
 	"context"
 	"fmt"
 	"io"
 	"io/ioutil"
+
+	speech "cloud.google.com/go/speech/apiv1"
+	speechpb "google.golang.org/genproto/googleapis/cloud/speech/v1"
 )
 
 // [START speech_transcribe_multichannel_beta]

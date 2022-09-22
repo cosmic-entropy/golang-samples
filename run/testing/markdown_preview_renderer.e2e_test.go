@@ -34,7 +34,7 @@ func TestRendererService(t *testing.T) {
 	}
 	defer service.Clean()
 
-	var tests = []struct {
+	tests := []struct {
 		label string
 		input string
 		want  string

@@ -62,7 +62,6 @@ func downloadFile(w io.Writer, bucket, object string, destFileName string) error
 	fmt.Fprintf(w, "Blob %v downloaded to local file %v\n", object, destFileName)
 
 	return nil
-
 }
 
 // [END storage_download_file]

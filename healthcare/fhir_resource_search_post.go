@@ -45,7 +45,6 @@ func searchFHIRResourcesPost(w io.Writer, projectID, location, datasetID, fhirSt
 	// but the POST request to search for FHIR resources does
 	// not pass any data in its body.
 	req, err := http.NewRequest(http.MethodPost, name, nil)
-
 	// To set additional parameters for search filtering, append the
 	// search terms as query parameters, then assign the encoded
 	// query string to the request.
@@ -54,7 +53,6 @@ func searchFHIRResourcesPost(w io.Writer, projectID, location, datasetID, fhirSt
 	// q := req.URL.Query()
 	// q.Add("family:exact", "Smith")
 	// req.URL.RawQuery = q.Encode()
-
 	if err != nil {
 		return fmt.Errorf("NewRequest: %v", err)
 	}

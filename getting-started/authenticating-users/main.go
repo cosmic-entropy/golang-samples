@@ -122,7 +122,6 @@ func validateAssertion(assertion string, certs map[string]string, aud string) (e
 		cert := certs[keyID]
 		return jwt.ParseECPublicKeyFromPEM([]byte(cert))
 	})
-
 	if err != nil {
 		return "", "", err
 	}

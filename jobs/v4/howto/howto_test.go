@@ -28,8 +28,10 @@ import (
 	talentpb "google.golang.org/genproto/googleapis/cloud/talent/v4beta1"
 )
 
-var testCompany *talentpb.Company
-var testJob *talentpb.Job
+var (
+	testCompany *talentpb.Company
+	testJob     *talentpb.Job
+)
 
 func TestBasicUsage(t *testing.T) {
 	t.Skip("Flaky. https://github.com/GoogleCloudPlatform/golang-samples/issues/1061.")
@@ -235,7 +237,6 @@ func TestCreateJobWithCustomAttributes(t *testing.T) {
 		if got := buf.String(); !strings.Contains(got, want) {
 			r.Errorf("getJob got %q, want to contain %q", got, want)
 		}
-
 	})
 
 	jobID := strings.SplitAfter(customJob.Name, "jobs/")[1]

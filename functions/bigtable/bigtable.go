@@ -58,7 +58,6 @@ func BigtableRead(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintf(w, "Rowkey: %s, os_build:  %s\n", row.Key(), osBuild)
 			return true
 		})
-
 	if err != nil {
 		http.Error(w, "Error reading rows", http.StatusInternalServerError)
 		log.Printf("tbl.ReadRows(): %v", err)

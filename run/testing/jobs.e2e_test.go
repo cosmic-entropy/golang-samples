@@ -52,5 +52,4 @@ func TestCloudRunJobs(t *testing.T) {
 	}
 
 	defer crj.Clean()
-
 }

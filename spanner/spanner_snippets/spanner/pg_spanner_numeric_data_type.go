@@ -49,7 +49,8 @@ func pgNumericDataType(w io.Writer, db string) error {
 				VenueId  bigint NOT NULL PRIMARY KEY,
 				Name     varchar(1024) NOT NULL,
 				Revenues numeric
-			)`},
+			)`,
+		},
 	})
 	if err != nil {
 		return err

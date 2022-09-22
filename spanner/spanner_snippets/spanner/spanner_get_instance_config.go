@@ -37,7 +37,6 @@ func getInstanceConfig(w io.Writer, instanceConfigName string) error {
 	ic, err := instanceAdmin.GetInstanceConfig(ctx, &instancepb.GetInstanceConfigRequest{
 		Name: instanceConfigName,
 	})
-
 	if err != nil {
 		return fmt.Errorf("could not get instance config %s: %v", instanceConfigName, err)
 	}

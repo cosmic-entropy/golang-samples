@@ -840,7 +840,6 @@ func listGateways(w io.Writer, projectID string, region string, registryID strin
 
 	parent := fmt.Sprintf("projects/%s/locations/%s/registries/%s", projectID, region, registryID)
 	response, err := client.Projects.Locations.Registries.Devices.List(parent).GatewayListOptionsGatewayType("GATEWAY").Do()
-
 	if err != nil {
 		return nil, fmt.Errorf("ListGateways: %v", err)
 	}
@@ -883,7 +882,6 @@ func bindDeviceToGateway(w io.Writer, projectID string, region string, registryI
 	}
 
 	response, err := client.Projects.Locations.Registries.BindDeviceToGateway(parent, bindRequest).Do()
-
 	if err != nil {
 		return nil, fmt.Errorf("BindDeviceToGateway: %v", err)
 	}
@@ -921,7 +919,6 @@ func unbindDeviceFromGateway(w io.Writer, projectID string, region string, regis
 	}
 
 	response, err := client.Projects.Locations.Registries.UnbindDeviceFromGateway(parent, unbindRequest).Do()
-
 	if err != nil {
 		return nil, fmt.Errorf("UnbindDeviceFromGateway error: %v", err)
 	}
@@ -955,7 +952,6 @@ func listDevicesForGateway(w io.Writer, projectID string, region string, registr
 
 	parent := fmt.Sprintf("projects/%s/locations/%s/registries/%s", projectID, region, registryID)
 	response, err := client.Projects.Locations.Registries.Devices.List(parent).GatewayListOptionsAssociationsGatewayId(gatewayID).Do()
-
 	if err != nil {
 		return nil, fmt.Errorf("ListDevicesForGateway: %v", err)
 	}

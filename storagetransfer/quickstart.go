@@ -46,9 +46,11 @@ func quickstart(w io.Writer, projectID string, sourceGCSBucket string, sinkGCSBu
 			ProjectId: projectID,
 			TransferSpec: &storagetransferpb.TransferSpec{
 				DataSource: &storagetransferpb.TransferSpec_GcsDataSource{
-					GcsDataSource: &storagetransferpb.GcsData{BucketName: sourceGCSBucket}},
+					GcsDataSource: &storagetransferpb.GcsData{BucketName: sourceGCSBucket},
+				},
 				DataSink: &storagetransferpb.TransferSpec_GcsDataSink{
-					GcsDataSink: &storagetransferpb.GcsData{BucketName: sinkGCSBucket}},
+					GcsDataSink: &storagetransferpb.GcsData{BucketName: sinkGCSBucket},
+				},
 			},
 			Status: storagetransferpb.TransferJob_ENABLED,
 		},

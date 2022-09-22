@@ -69,7 +69,8 @@ func main() {
 	_, err = client.Apply(ctx, []*spanner.Mutation{
 		spanner.Insert("Users",
 			[]string{"name", "email"},
-			[]interface{}{"alice", "a@example.com"})})
+			[]interface{}{"alice", "a@example.com"}),
+	})
 	if err != nil {
 		log.Printf("Failed to insert: %v", err)
 	}

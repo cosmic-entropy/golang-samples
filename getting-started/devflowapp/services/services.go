@@ -25,7 +25,6 @@ import (
 
 // Interface for sending messages
 type MessageService interface {
-
 	// Gets the messages that have been sent to a user
 	GetMessages(userTo string) ([]Message, error)
 
@@ -44,7 +43,8 @@ type SQLMessagingService struct{ DBConn *sql.DB }
 
 // Gets messages from a SQL database
 func (service SQLMessagingService) GetMessages(userTo string) ([]Message,
-	error) {
+	error,
+) {
 	log.Printf("SQLMessagingService.GetMessages, userTo: %s\n", userTo)
 	messages := []Message{}
 	rows, err := service.DBConn.Query(
@@ -69,7 +69,8 @@ func (service SQLMessagingService) GetMessages(userTo string) ([]Message,
 
 // Saves a message to the SQL database
 func (service SQLMessagingService) SendMessage(userFrom, userTo,
-	text string) error {
+	text string,
+) error {
 	log.Printf("SQLMessagingService.SendMessage, Message: %s\n", text)
 	result, err := service.DBConn.Exec(
 		"INSERT INTO messages (user_from, user_to, text) VALUES (?, ?, ?)",
@@ -93,7 +94,8 @@ func FormatMessage(user, friend, message string) string {
 
 // Checks user messages, with the given MessageService and user id
 func CheckMessages(messageService MessageService,
-	userTo string) ([]Message, error) {
+	userTo string,
+) ([]Message, error) {
 	log.Printf("CheckMessages, Message: %s\n", userTo)
 	return messageService.GetMessages(userTo)
 }

@@ -129,7 +129,6 @@ func TestQuickstart(t *testing.T) {
 	}
 
 	testutil.Retry(t, 3, 30*time.Second, func(r *testutil.R) {
-
 		stdOut, stdErr, err := m.Run(nil, 10*time.Minute,
 			"--project_id", tc.ProjectID,
 			"--region", region,

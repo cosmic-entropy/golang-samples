@@ -154,7 +154,6 @@ func verifyWebHook(r *http.Request, slackSigningSecret string) (bool, error) {
 
 	trimmed := strings.TrimPrefix(slackSignature, fmt.Sprintf("%s=", version))
 	signatureInHeader, err := hex.DecodeString(trimmed)
-
 	if err != nil {
 		return false, fmt.Errorf("hex.DecodeString(%v): %v", trimmed, err)
 	}

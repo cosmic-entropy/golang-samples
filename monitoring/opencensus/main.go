@@ -66,7 +66,6 @@ var (
 // [END monitoring_sli_metrics_opencensus_view]
 
 func main() {
-
 	// Expects that the project ID be provided via a flag when starting the server.
 	projectID := flag.String("project_id", "", "Cloud Project ID")
 	flag.Parse()

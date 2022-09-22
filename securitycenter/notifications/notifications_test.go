@@ -67,7 +67,6 @@ func addNotificationConfig(t *testing.T, notificationConfigID string) error {
 
 	ctx := context.Background()
 	client, err := securitycenter.NewClient(ctx)
-
 	if err != nil {
 		return fmt.Errorf("securitycenter.NewClient: %v", err)
 	}
@@ -100,7 +99,6 @@ func cleanupNotificationConfig(t *testing.T, notificationConfigID string) error 
 
 	ctx := context.Background()
 	client, err := securitycenter.NewClient(ctx)
-
 	if err != nil {
 		return fmt.Errorf("securitycenter.NewClient: %v", err)
 	}

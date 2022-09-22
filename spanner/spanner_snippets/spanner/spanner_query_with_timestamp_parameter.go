@@ -34,7 +34,7 @@ func queryWithTimestampParameter(w io.Writer, db string) error {
 	}
 	defer client.Close()
 
-	var exampleTimestamp = time.Now()
+	exampleTimestamp := time.Now()
 	stmt := spanner.Statement{
 		SQL: `SELECT VenueId, VenueName, LastUpdateTime FROM Venues
 		WHERE LastUpdateTime <= @lastUpdateTime`,

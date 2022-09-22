@@ -39,7 +39,6 @@ func TestMain(t *testing.T) {
 
 	testutil.Retry(t, 5, 5*time.Second, func(r *testutil.R) {
 		stdOut, stdErr, err := m.Run(env, 2*time.Minute, "-project", projectID)
-
 		if err != nil {
 			r.Errorf("execution failed: %v, stdOut:%s, stdErr:%s", err, stdOut, stdErr)
 			return

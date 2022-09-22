@@ -30,7 +30,6 @@ func deleteNotificationConfig(w io.Writer, orgID string, notificationConfigID st
 
 	ctx := context.Background()
 	client, err := securitycenter.NewClient(ctx)
-
 	if err != nil {
 		return fmt.Errorf("securitycenter.NewClient: %v", err)
 	}

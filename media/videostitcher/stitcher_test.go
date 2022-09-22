@@ -45,12 +45,14 @@ const (
 	updatedPrivateKey    = "VGhpcyBpcyBhbiB1cGRhdGVkIHRlc3Qgc3RyaW5nLg=="
 )
 
-var bucketName string
-var slateURI string
-var updatedSlateURI string
-var projectNumber string
-var vodURI string
-var liveURI string
+var (
+	bucketName      string
+	slateURI        string
+	updatedSlateURI string
+	projectNumber   string
+	vodURI          string
+	liveURI         string
+)
 
 // To run the tests, do the following:
 // Export the following env vars:

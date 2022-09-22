@@ -67,14 +67,18 @@ func TestPendingStream(t *testing.T) {
 		{Name: "timestamp_col", Type: bigquery.TimestampFieldType},
 
 		{Name: "int64_list", Type: bigquery.IntegerFieldType, Repeated: true},
-		{Name: "struct_col", Type: bigquery.RecordFieldType,
+		{
+			Name: "struct_col", Type: bigquery.RecordFieldType,
 			Schema: bigquery.Schema{
 				{Name: "sub_int_col", Type: bigquery.IntegerFieldType},
-			}},
-		{Name: "struct_list", Type: bigquery.RecordFieldType, Repeated: true,
+			},
+		},
+		{
+			Name: "struct_list", Type: bigquery.RecordFieldType, Repeated: true,
 			Schema: bigquery.Schema{
 				{Name: "sub_int_col", Type: bigquery.IntegerFieldType},
-			}},
+			},
+		},
 		{Name: "row_num", Type: bigquery.IntegerFieldType, Required: true},
 	}
 
@@ -87,5 +91,4 @@ func TestPendingStream(t *testing.T) {
 	if err := appendToPendingStream(ioutil.Discard, tc.ProjectID, testDatasetID, testTableID); err != nil {
 		t.Errorf("appendToPendingStream(%q %q): %v", testDatasetID, testTableID, err)
 	}
-
 }

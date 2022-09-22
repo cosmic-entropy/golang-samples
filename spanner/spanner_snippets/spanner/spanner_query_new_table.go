@@ -35,7 +35,8 @@ func queryNewTable(w io.Writer, db string) error {
 
 	stmt := spanner.Statement{
 		SQL: `SELECT SingerId, VenueId, EventDate, Revenue, LastUpdateTime FROM Performances
-				ORDER BY LastUpdateTime DESC`}
+				ORDER BY LastUpdateTime DESC`,
+	}
 	iter := client.Single().Query(ctx, stmt)
 	defer iter.Stop()
 	for {

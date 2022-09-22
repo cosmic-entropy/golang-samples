@@ -38,7 +38,6 @@ func TestEnableAssetDiscovery(t *testing.T) {
 		buf := new(bytes.Buffer)
 
 		err := enableAssetDiscovery(buf, orgID)
-
 		if err != nil {
 			r.Errorf("enableAssetDiscovery(%s) had error: %v", orgID, err)
 			return
@@ -60,7 +59,6 @@ func TestGetOrgSettings(t *testing.T) {
 		buf := new(bytes.Buffer)
 
 		err := getOrgSettings(buf, orgID)
-
 		if err != nil {
 			r.Errorf("getOrgSettings(%s) had error: %v", orgID, err)
 			return

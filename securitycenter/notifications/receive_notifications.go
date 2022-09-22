@@ -41,7 +41,7 @@ func receiveMessages(w io.Writer, projectID string, subscriptionName string) err
 	sub := client.Subscription(subscriptionName)
 	cctx, cancel := context.WithCancel(ctx)
 	err = sub.Receive(cctx, func(ctx context.Context, msg *pubsub.Message) {
-		var notificationMessage = new(securitycenterpb.NotificationMessage)
+		notificationMessage := new(securitycenterpb.NotificationMessage)
 		jsonpb.Unmarshal(bytes.NewReader(msg.Data), notificationMessage)
 
 		fmt.Fprintln(w, "Got finding: ", notificationMessage.GetFinding())

@@ -28,8 +28,10 @@ import (
 	"cloud.google.com/go/storage"
 )
 
-var startupTime time.Time
-var client *storage.Client
+var (
+	startupTime time.Time
+	client      *storage.Client
+)
 
 func main() {
 	// Perform required setup steps for the application to function.

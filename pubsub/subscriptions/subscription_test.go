@@ -35,8 +35,10 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-var topicID string
-var subID string
+var (
+	topicID string
+	subID   string
+)
 
 const (
 	topicPrefix = "topic"
@@ -211,7 +213,6 @@ func TestIAM(t *testing.T) {
 		if role, member := iam.Viewer, iam.AllUsers; !policy.HasRole(member, role) {
 			r.Errorf("want %q as viewer, policy=%v", member, policy)
 		}
-
 	})
 }
 

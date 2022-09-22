@@ -154,7 +154,6 @@ func TestCopiesAndExtracts(t *testing.T) {
 			if err := exportTableAsCompressedCSV(tc.ProjectID, gcsURI); err != nil {
 				t.Errorf("exportTableAsCompressedCSV(%s): %v", gcsURI, err)
 			}
-
 		})
 		t.Run("exportTableAsJSON", func(t *testing.T) {
 			t.Parallel()
@@ -162,7 +161,6 @@ func TestCopiesAndExtracts(t *testing.T) {
 			if err := exportTableAsJSON(tc.ProjectID, gcsURI); err != nil {
 				t.Errorf("exportTableAsJSON(%s): %v", gcsURI, err)
 			}
-
 		})
 	})
 
@@ -181,7 +179,6 @@ func TestCopiesAndExtracts(t *testing.T) {
 	if err := storageClient.Bucket(bucket).Delete(ctx); err != nil {
 		t.Errorf("failed to cleanup the GCS bucket: %v", err)
 	}
-
 }
 
 // generateTableCTAS creates a quick table by issuing a CREATE TABLE AS SELECT

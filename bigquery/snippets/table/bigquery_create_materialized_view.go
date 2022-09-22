@@ -47,7 +47,8 @@ func createMaterializedView(projectID, datasetID, baseTableID, viewID string) er
 		MaterializedView: &bigquery.MaterializedViewDefinition{
 			Query: fmt.Sprintf(`SELECT MAX(TimestampField) AS TimestampField, StringField, 
 					  MAX(BooleanField) AS BooleanField FROM %s GROUP BY StringField`, tableStr),
-		}}
+		},
+	}
 
 	viewRef := client.Dataset(datasetID).Table(viewID)
 	if err := viewRef.Create(ctx, metaData); err != nil {

@@ -49,7 +49,8 @@ func setBucketCORSConfiguration(w io.Writer, bucketName string, maxAge time.Dura
 				Methods:         methods,
 				Origins:         origins,
 				ResponseHeaders: responseHeaders,
-			}},
+			},
+		},
 	}
 	if _, err := bucket.Update(ctx, bucketAttrsToUpdate); err != nil {
 		return fmt.Errorf("Bucket(%q).Update: %v", bucketName, err)

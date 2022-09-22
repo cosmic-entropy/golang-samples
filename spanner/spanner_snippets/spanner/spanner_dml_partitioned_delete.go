@@ -36,7 +36,6 @@ func deleteUsingPartitionedDML(w io.Writer, db string) error {
 	rowCount, err := client.PartitionedUpdate(ctx, stmt)
 	if err != nil {
 		return err
-
 	}
 	fmt.Fprintf(w, "%d record(s) deleted.", rowCount)
 	return nil

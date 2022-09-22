@@ -50,7 +50,8 @@ func pgOrderNulls(w io.Writer, db string) error {
 			`CREATE TABLE Singers (
 				SingerId  bigint NOT NULL PRIMARY KEY,
 				Name varchar(1024)
-			)`},
+			)`,
+		},
 	})
 	if err != nil {
 		return err

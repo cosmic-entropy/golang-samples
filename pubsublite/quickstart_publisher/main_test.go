@@ -60,7 +60,6 @@ func TestQuickstartPublisher(t *testing.T) {
 		"--topic_id", topicID,
 		"--message_count", "10",
 	)
-
 	if err != nil {
 		t.Errorf("stdout: %v", string(stdOut))
 		t.Errorf("stderr: %v", string(stdErr))

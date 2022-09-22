@@ -43,7 +43,6 @@ func getDatabaseDdl(w io.Writer, db string) error {
 	op, err := adminClient.GetDatabaseDdl(ctx, &adminpb.GetDatabaseDdlRequest{
 		Database: db,
 	})
-
 	if err != nil {
 		return err
 	}
@@ -51,7 +50,6 @@ func getDatabaseDdl(w io.Writer, db string) error {
 	fmt.Fprintf(w, "Database DDL is as follows: \n [%v]", op.GetStatements())
 
 	return nil
-
 }
 
 // [END spanner_get_database_ddl]

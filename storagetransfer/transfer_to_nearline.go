@@ -58,7 +58,8 @@ func transferToNearline(w io.Writer, projectID string, gcsSourceBucket string, g
 			Description: jobDescription,
 			TransferSpec: &storagetransferpb.TransferSpec{
 				DataSink: &storagetransferpb.TransferSpec_GcsDataSink{
-					GcsDataSink: &storagetransferpb.GcsData{BucketName: gcsNearlineSinkBucket}},
+					GcsDataSink: &storagetransferpb.GcsData{BucketName: gcsNearlineSinkBucket},
+				},
 				DataSource: &storagetransferpb.TransferSpec_GcsDataSource{
 					GcsDataSource: &storagetransferpb.GcsData{BucketName: gcsSourceBucket},
 				},

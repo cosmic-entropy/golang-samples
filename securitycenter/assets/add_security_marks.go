@@ -60,7 +60,6 @@ func addSecurityMarks(w io.Writer, assetName string) error {
 		fmt.Fprintf(w, "%s = %s\n", k, v)
 	}
 	return nil
-
 }
 
 // [END securitycenter_add_security_marks]

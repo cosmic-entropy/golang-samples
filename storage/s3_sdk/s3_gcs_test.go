@@ -118,5 +118,4 @@ func TestListGCSObjects(t *testing.T) {
 			r.Errorf("listGCSObjects got\n----\n%s\n----\nWant to contain\n----\n%s\n----", got, want)
 		}
 	})
-
 }

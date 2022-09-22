@@ -167,7 +167,6 @@ func TestQueries(t *testing.T) {
 			}
 		})
 	})
-
 }
 
 // preparePartitionedData setups up example partitioned/clustered table resources for the query tests.

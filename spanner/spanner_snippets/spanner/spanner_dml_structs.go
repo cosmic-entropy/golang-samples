@@ -37,7 +37,7 @@ func updateUsingDMLStruct(w io.Writer, db string) error {
 			FirstName string
 			LastName  string
 		}
-		var singerInfo = name{"Timothy", "Campbell"}
+		singerInfo := name{"Timothy", "Campbell"}
 
 		stmt := spanner.Statement{
 			SQL: `Update Singers Set LastName = 'Grant'

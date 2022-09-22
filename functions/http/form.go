@@ -58,7 +58,6 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 			// Use h.Open() to read the contents of the file.
 		}
 	}
-
 }
 
 // [END functions_http_form_data]

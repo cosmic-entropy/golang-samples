@@ -206,5 +206,4 @@ func TestStartStopSnippets(t *testing.T) {
 	if err := deleteInstance(buf, tc.ProjectID, zone, instanceName2); err != nil {
 		t.Errorf("deleteInstance got err: %v", err)
 	}
-
 }

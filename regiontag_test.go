@@ -105,7 +105,6 @@ func merge(cs ...<-chan RegionTag) <-chan RegionTag {
 }
 
 func TestRegionTags(t *testing.T) {
-
 	in := listPackages()
 	const workers = 4
 

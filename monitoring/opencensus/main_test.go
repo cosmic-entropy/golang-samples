@@ -26,7 +26,6 @@ import (
 )
 
 func TestStartingServer(t *testing.T) {
-
 	// Tests build.
 	m := testutil.BuildMain(t)
 	if !m.Built() {
@@ -57,5 +56,4 @@ func TestStartingServer(t *testing.T) {
 	if rr.Body.String() != wantIntentionalError && !strings.Contains(rr.Body.String(), wantSuccess) {
 		t.Fatalf("Response does not match expected: got %v", rr.Body.String())
 	}
-
 }

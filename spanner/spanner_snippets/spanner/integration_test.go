@@ -41,16 +41,16 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-type sampleFunc func(w io.Writer, dbName string) error
-type sampleFuncWithContext func(ctx context.Context, w io.Writer, dbName string) error
-type instanceSampleFunc func(w io.Writer, projectID, instanceID string) error
-type backupSampleFunc func(ctx context.Context, w io.Writer, dbName, backupID string) error
-type backupSampleFuncWithoutContext func(w io.Writer, dbName, backupID string) error
-type createBackupSampleFunc func(ctx context.Context, w io.Writer, dbName, backupID string, versionTime time.Time) error
-
-var (
-	validInstancePattern = regexp.MustCompile("^projects/(?P<project>[^/]+)/instances/(?P<instance>[^/]+)$")
+type (
+	sampleFunc                     func(w io.Writer, dbName string) error
+	sampleFuncWithContext          func(ctx context.Context, w io.Writer, dbName string) error
+	instanceSampleFunc             func(w io.Writer, projectID, instanceID string) error
+	backupSampleFunc               func(ctx context.Context, w io.Writer, dbName, backupID string) error
+	backupSampleFuncWithoutContext func(w io.Writer, dbName, backupID string) error
+	createBackupSampleFunc         func(ctx context.Context, w io.Writer, dbName, backupID string, versionTime time.Time) error
 )
+
+var validInstancePattern = regexp.MustCompile("^projects/(?P<project>[^/]+)/instances/(?P<instance>[^/]+)$")
 
 func initTest(t *testing.T, id string) (instName, dbName string, cleanup func()) {
 	projectID := getSampleProjectId(t)
@@ -600,7 +600,6 @@ func TestPgSample(t *testing.T) {
 	out = runSample(t, pgQueryNewColumn, dbName, "failed to query new column in Spanner PG database")
 	assertContains(t, out, "1 1 300000")
 	assertContains(t, out, "2 2 300000")
-
 }
 
 func TestPgQueryParameter(t *testing.T) {
@@ -1145,7 +1144,8 @@ func deleteInstanceAndBackups(
 	t *testing.T,
 	instanceName string,
 	instanceAdmin *instance.InstanceAdminClient,
-	databaseAdmin *database.DatabaseAdminClient) {
+	databaseAdmin *database.DatabaseAdminClient,
+) {
 	ctx := context.Background()
 	// Delete all backups before deleting the instance.
 	iter := databaseAdmin.ListBackups(ctx, &adminpb.ListBackupsRequest{

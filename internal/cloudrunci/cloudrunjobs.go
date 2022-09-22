@@ -91,7 +91,6 @@ func (j *Job) CommonGCloudFlags() []string {
 		"--region", j.Region,
 		"--project", j.ProjectID,
 	}
-
 }
 
 // validate confirms all required job properties are present.

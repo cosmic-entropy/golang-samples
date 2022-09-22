@@ -27,8 +27,10 @@ import (
 	talent "google.golang.org/api/jobs/v3"
 )
 
-var testCompany *talent.Company
-var testJob *talent.Job
+var (
+	testCompany *talent.Company
+	testJob     *talent.Job
+)
 
 func TestMain(m *testing.M) {
 	tc, ok := testutil.ContextMain(m)

@@ -69,12 +69,10 @@ func DB() *sql.DB {
 	// connection string format: USER:PASSWORD@unix(/cloudsql/PROJECT_ID:REGION_ID:INSTANCE_ID)/[DB_NAME]
 	dbURI := fmt.Sprintf("%s:%s@unix(%s/%s)/%s", user, password, socket, connectionName, dbName)
 	conn, err := sql.Open("mysql", dbURI)
-
 	// PostgreSQL Connection, uncomment to use.
 	// connection string format: user=USER password=PASSWORD host=/cloudsql/PROJECT_ID:REGION_ID:INSTANCE_ID/[ dbname=DB_NAME]
 	// dbURI := fmt.Sprintf("user=%s password=%s host=/cloudsql/%s dbname=%s", user, password, connectionName, dbName)
 	// conn, err := sql.Open("postgres", dbURI)
-
 	if err != nil {
 		panic(fmt.Sprintf("DB: %v", err))
 	}

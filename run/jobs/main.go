@@ -43,7 +43,6 @@ func configFromEnv() (Config, error) {
 	sleepMs, err := sleepMsToInt(os.Getenv("SLEEP_MS"))
 	failRate, err := failRateToFloat(os.Getenv("FAIL_RATE"))
 	// [END cloudrun_jobs_env_vars]
-
 	if err != nil {
 		return Config{}, err
 	}

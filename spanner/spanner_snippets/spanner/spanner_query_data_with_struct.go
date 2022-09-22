@@ -37,7 +37,7 @@ func queryWithStruct(w io.Writer, db string) error {
 		FirstName string
 		LastName  string
 	}
-	var singerInfo = name{"Elena", "Campbell"}
+	singerInfo := name{"Elena", "Campbell"}
 
 	// [END spanner_create_struct_with_data]
 

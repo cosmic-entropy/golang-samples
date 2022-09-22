@@ -50,5 +50,4 @@ func TestMain(t *testing.T) {
 			r.Errorf("stdout returned %s, wanted to contain %s", got, want)
 		}
 	})
-
 }

@@ -115,7 +115,6 @@ func modifyInstanceWithExtendedMemory(
 	fmt.Fprintf(w, "Instance updated\n")
 
 	return nil
-
 }
 
 // [END compute_custom_machine_type_update_memory]

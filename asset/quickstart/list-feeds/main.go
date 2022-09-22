@@ -50,7 +50,8 @@ func main() {
 	projectNumber := strconv.FormatInt(project.ProjectNumber, 10)
 	parent := fmt.Sprintf("projects/%s", projectNumber)
 	req := &assetpb.ListFeedsRequest{
-		Parent: parent}
+		Parent: parent,
+	}
 	response, err := client.ListFeeds(ctx, req)
 	if err != nil {
 		log.Fatalf("client.ListFeeds: %v", err)

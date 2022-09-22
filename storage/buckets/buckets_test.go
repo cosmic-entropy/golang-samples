@@ -226,6 +226,7 @@ func TestIAM(t *testing.T) {
 		t.Errorf("removeBucketConditionalIAMBinding: %v", err)
 	}
 }
+
 func TestCORSConfiguration(t *testing.T) {
 	tc := testutil.SystemTest(t)
 	ctx := context.Background()
@@ -511,7 +512,6 @@ func TestPublicAccessPrevention(t *testing.T) {
 	if attrs.PublicAccessPrevention != storage.PublicAccessPreventionInherited {
 		t.Errorf("PublicAccessPrevention: got %s, want %s", attrs.PublicAccessPrevention, storage.PublicAccessPreventionInherited)
 	}
-
 }
 
 func TestLifecycleManagement(t *testing.T) {

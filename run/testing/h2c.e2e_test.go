@@ -53,7 +53,6 @@ func TestHTTP2Server(t *testing.T) {
 	h2Client := &http.Client{Transport: &http2.Transport{}}
 	testutil.Retry(t, 10, 5*time.Second, func(r *testutil.R) {
 		resp, err := h2Client.Get(svcURL.String())
-
 		if err != nil {
 			r.Errorf("http2.Get failed: %v", err)
 		}

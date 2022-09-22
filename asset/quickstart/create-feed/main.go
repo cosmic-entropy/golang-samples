@@ -59,7 +59,8 @@ func main() {
 					},
 				},
 			},
-		}}
+		},
+	}
 	response, err := client.CreateFeed(ctx, req)
 	if err != nil {
 		log.Fatalf("client.CreateFeed: %v", err)

@@ -46,7 +46,8 @@ func pgInformationSchema(w io.Writer, db string) error {
 				Name     varchar(1024) NOT NULL,
 				Revenues numeric,
 				Picture  bytea
-		 )`}
+		 )`,
+	}
 	req := &adminpb.UpdateDatabaseDdlRequest{
 		Database:   db,
 		Statements: ddl,

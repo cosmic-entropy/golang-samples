@@ -65,7 +65,6 @@ func downloadByteRange(w io.Writer, bucket, object string, startByte int64, endB
 	fmt.Fprintf(w, "Bytes %v to %v of blob %v downloaded to local file %v\n", startByte, startByte+length, object, destFileName)
 
 	return nil
-
 }
 
 // [END storage_download_byte_range]

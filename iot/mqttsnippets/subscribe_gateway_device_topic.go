@@ -27,7 +27,6 @@ import (
 // subscribeGatewayToDeviceTopic creates a gateway client that subscribes to a topic of a bound device.
 // Currently supported topics include: "config", "state", "commands", "errors"
 func subscribeGatewayToDeviceTopic(w io.Writer, projectID string, region string, registryID string, gatewayID string, deviceID string, privateKeyPath string, algorithm string, clientDuration int, topic string) error {
-
 	const (
 		mqttBrokerURL   = "tls://mqtt.googleapis.com:8883"
 		protocolVersion = 4 // corresponds to MQTT 3.1.1

@@ -211,10 +211,9 @@ func TestListAllProjectAssetsAtTime(t *testing.T) {
 	testutil.Retry(t, 5, 5*time.Second, func(r *testutil.R) {
 		orgID := setup(t)
 		buf := new(bytes.Buffer)
-		var nothingInstant = time.Date(2019, 1, 1, 0, 0, 0, 0, time.UTC)
+		nothingInstant := time.Date(2019, 1, 1, 0, 0, 0, 0, time.UTC)
 
 		err := listAllProjectAssetsAtTime(buf, orgID, nothingInstant)
-
 		if err != nil {
 			r.Errorf("listAllProjectAssetsAtTime(%s, %v) failed: %v", orgID, nothingInstant, err)
 			return
@@ -226,7 +225,7 @@ func TestListAllProjectAssetsAtTime(t *testing.T) {
 		}
 
 		buf.Reset()
-		var somethingInstant = time.Now()
+		somethingInstant := time.Now()
 		err = listAllProjectAssetsAtTime(buf, orgID, somethingInstant)
 		if err != nil {
 			r.Errorf("listAllProjectAssetsAtTime(%s, %v) failed: %v", orgID, somethingInstant, err)

@@ -33,7 +33,7 @@ func queryWithFloat(w io.Writer, db string) error {
 	}
 	defer client.Close()
 
-	var exampleFloat = 0.8
+	exampleFloat := 0.8
 	stmt := spanner.Statement{
 		SQL: `SELECT VenueId, VenueName, PopularityScore FROM Venues
             	WHERE PopularityScore > @popularityScore`,
