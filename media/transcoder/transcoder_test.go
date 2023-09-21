@@ -40,8 +40,9 @@ const (
 	testVideoFileName        = "ChromeCast.mp4"
 	testConcatFileName       = "ForBiggerEscapes.mp4"
 	testOverlayImageFileName = "overlay.jpg"
-	testCaptionsFileName     = "caption.srt"
-	preset                   = "preset/web-hd"
+	testCaptionsFileName     = "captions.srt"
+	testSubtitlesFileName1   = "subtitles-en.srt"
+	testSubtitlesFileName2   = "subtitles-es.srt"
 	smallSpriteSheetFileName = "small-sprite-sheet0000000000.jpeg"
 	largeSpriteSheetFileName = "large-sprite-sheet0000000000.jpeg"
 )
@@ -65,7 +66,10 @@ func TestJobTemplatesAndJobs(t *testing.T) {
 	inputConcatURI := "gs://" + bucketName + "/" + testBucketDirName + testConcatFileName
 	inputOverlayImageURI := "gs://" + bucketName + "/" + testBucketDirName + testOverlayImageFileName
 	inputCaptionsURI := "gs://" + bucketName + "/" + testBucketDirName + testCaptionsFileName
+	inputSubtitles1URI := "gs://" + bucketName + "/" + testBucketDirName + testSubtitlesFileName1
+	inputSubtitles2URI := "gs://" + bucketName + "/" + testBucketDirName + testSubtitlesFileName2
 	outputURIForPreset := "gs://" + bucketName + "/test-output-preset/"
+	outputURIForPresetBatchMode := "gs://" + bucketName + "/test-output-preset-batch-mode/"
 	outputURIForTemplate := "gs://" + bucketName + "/test-output-template/"
 	outputURIForAdHoc := "gs://" + bucketName + "/test-output-adhoc/"
 	outputURIForStaticOverlay := "gs://" + bucketName + "/test-output-static-overlay/"
@@ -95,6 +99,8 @@ func TestJobTemplatesAndJobs(t *testing.T) {
 	t.Logf("\nwriteTestGCSFiles() completed\n")
 	testJobFromPreset(t, projectNumber, inputURI, outputURIForPreset)
 	t.Logf("\ntestJobFromPreset() completed\n")
+	testJobFromPresetBatchMode(t, projectNumber, inputURI, outputURIForPresetBatchMode)
+	t.Logf("\ntestJobFromPresetBatchMode() completed\n")
 	testJobFromTemplate(t, projectNumber, inputURI, outputURIForTemplate)
 	t.Logf("\ntestJobFromTemplate() completed\n")
 	testJobFromAdHoc(t, projectNumber, inputURI, outputURIForAdHoc)
@@ -121,7 +127,7 @@ func TestJobTemplatesAndJobs(t *testing.T) {
 
 	testJobWithEmbeddedCaptions(t, projectNumber, inputURI, inputCaptionsURI, outputURIForEmbeddedCaptions)
 	t.Logf("\ntestJobWithEmbeddedCaptions() completed\n")
-	testJobWithStandaloneCaptions(t, projectNumber, inputURI, inputCaptionsURI, outputURIForStandaloneCaptions)
+	testJobWithStandaloneCaptions(t, projectNumber, inputURI, inputSubtitles1URI, inputSubtitles2URI, outputURIForStandaloneCaptions)
 	t.Logf("\ntestJobWithStandaloneCaptions() completed\n")
 }
 
@@ -193,6 +199,8 @@ func writeTestGCSFiles(t *testing.T, projectID string, bucketName string) {
 	writeTestGCSFile(t, bucketName, testBucketName, testBucketDirName+testOverlayImageFileName)
 	writeTestGCSFile(t, bucketName, testBucketName, testBucketDirName+testConcatFileName)
 	writeTestGCSFile(t, bucketName, testBucketName, testBucketDirName+testCaptionsFileName)
+	writeTestGCSFile(t, bucketName, testBucketName, testBucketDirName+testSubtitlesFileName1)
+	writeTestGCSFile(t, bucketName, testBucketName, testBucketDirName+testSubtitlesFileName2)
 }
 
 // writeTestGCSFile deletes the GCS test bucket and uploads a test video file to it.
@@ -254,13 +262,87 @@ func testJobFromPreset(t *testing.T, projectNumber string, inputURI string, outp
 
 	// Create the job.
 	jobName := fmt.Sprintf("projects/%s/locations/%s/jobs/", projectNumber, location)
-	if err := createJobFromPreset(buf, tc.ProjectID, location, inputURI, outputURIForPreset, preset); err != nil {
+	if err := createJobFromPreset(buf, tc.ProjectID, location, inputURI, outputURIForPreset); err != nil {
 		t.Errorf("createJobFromPreset got err: %v", err)
 	}
 	got := buf.String()
 
 	if !strings.Contains(got, jobName) {
 		t.Errorf("createJobFromPreset got\n----\n%v\n----\nWant to contain:\n----\n%v\n----\n", got, jobName)
+	}
+	strSlice := strings.Split(got, "/")
+	jobID = strSlice[len(strSlice)-1]
+	buf.Reset()
+
+	// Get the job by job ID.
+	testutil.Retry(t, 3, 5*time.Second, func(r *testutil.R) {
+		jobName := fmt.Sprintf("projects/%s/locations/%s/jobs/%s", projectNumber, location, jobID)
+		if err := getJob(buf, tc.ProjectID, location, jobID); err != nil {
+			r.Errorf("getJob got err: %v", err)
+		}
+		if got := buf.String(); !strings.Contains(got, jobName) {
+			r.Errorf("getJob got\n----\n%v\n----\nWant to contain:\n----\n%v\n----\n", got, jobName)
+		}
+	})
+	buf.Reset()
+
+	// Get the job state, which should be succeeded. If the job is still running on the last attempt, pass the test.
+	testutil.Retry(t, 3, 30*time.Second, func(r *testutil.R) {
+		if err := getJobState(buf, tc.ProjectID, location, jobID); err != nil {
+			r.Errorf("getJobState got err: %v", err)
+		}
+		got := buf.String()
+
+		if r.Attempt == 3 {
+			if !strings.Contains(got, jobSucceededState) && !strings.Contains(got, jobRunningState) {
+				r.Errorf("getJobState got\n----\n%v\n----\nWant to contain:\n----\n%v or %v\n----\n", got, jobSucceededState, jobRunningState)
+			}
+		} else {
+			if !strings.Contains(got, jobSucceededState) {
+				r.Errorf("getJobState got\n----\n%v\n----\nWant to contain:\n----\n%v\n----\n", got, jobSucceededState)
+			}
+		}
+	})
+
+	// List the jobs for a given location.
+	testutil.Retry(t, 3, 5*time.Second, func(r *testutil.R) {
+		jobName := fmt.Sprintf("projects/%s/locations/%s/jobs/%s", projectNumber, location, jobID)
+		if err := listJobs(buf, tc.ProjectID, location); err != nil {
+			r.Errorf("listJobs got err: %v", err)
+		}
+		if got := buf.String(); !strings.Contains(got, jobName) {
+			r.Errorf("listJobs got\n----\n%v\n----\nWant to contain:\n----\n%v\n----\n", got, jobName)
+		}
+	})
+
+	// Delete the job.
+	testutil.Retry(t, 3, 5*time.Second, func(r *testutil.R) {
+		if err := deleteJob(buf, tc.ProjectID, location, jobID); err != nil {
+			r.Errorf("deleteJob got err: %v", err)
+		}
+		if got := buf.String(); !strings.Contains(got, deleteJobReponse) {
+			r.Errorf("deleteJob got\n----\n%v\n----\nWant to contain:\n----\n%v\n----\n", got, deleteJobReponse)
+		}
+	})
+}
+
+// testJobFromPresetBatchMode tests major operations on a job created from a
+// preset in batch mode. It will wait until the job successfully completes as
+// part of the test.
+func testJobFromPresetBatchMode(t *testing.T, projectNumber string, inputURI string, outputURIForPresetBatchMode string) {
+	tc := testutil.SystemTest(t)
+	buf := &bytes.Buffer{}
+	jobID := ""
+
+	// Create the job.
+	jobName := fmt.Sprintf("projects/%s/locations/%s/jobs/", projectNumber, location)
+	if err := createJobFromPresetBatchMode(buf, tc.ProjectID, location, inputURI, outputURIForPresetBatchMode); err != nil {
+		t.Errorf("createJobFromPresetBatchMode got err: %v", err)
+	}
+	got := buf.String()
+
+	if !strings.Contains(got, jobName) {
+		t.Errorf("createJobFromPresetBatchMode got\n----\n%v\n----\nWant to contain:\n----\n%v\n----\n", got, jobName)
 	}
 	strSlice := strings.Split(got, "/")
 	jobID = strSlice[len(strSlice)-1]
@@ -827,14 +909,14 @@ func testJobWithEmbeddedCaptions(t *testing.T, projectNumber string, inputVideoU
 
 // testJobWithStandaloneCaptions tests major operations on a job created from an ad-hoc configuration that
 // can use captions from a standalone file. It will wait until the job successfully completes as part of the test.
-func testJobWithStandaloneCaptions(t *testing.T, projectNumber string, inputVideoURI string, inputCaptionsURI string, outputURIForStandaloneCaptions string) {
+func testJobWithStandaloneCaptions(t *testing.T, projectNumber string, inputVideoURI string, inputSubtitles1URI string, inputSubtitles2URI string, outputURIForStandaloneCaptions string) {
 	tc := testutil.SystemTest(t)
 	buf := &bytes.Buffer{}
 	jobID := ""
 
 	// Create the job.
 	jobName := fmt.Sprintf("projects/%s/locations/%s/jobs/", projectNumber, location)
-	if err := createJobWithStandaloneCaptions(buf, tc.ProjectID, location, inputVideoURI, inputCaptionsURI, outputURIForStandaloneCaptions); err != nil {
+	if err := createJobWithStandaloneCaptions(buf, tc.ProjectID, location, inputVideoURI, inputSubtitles1URI, inputSubtitles2URI, outputURIForStandaloneCaptions); err != nil {
 		t.Errorf("createJobWithStandaloneCaptions got err: %v", err)
 	}
 	got := buf.String()

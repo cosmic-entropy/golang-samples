@@ -23,7 +23,7 @@ import (
 	"io"
 
 	kms "cloud.google.com/go/kms/apiv1"
-	kmspb "google.golang.org/genproto/googleapis/cloud/kms/v1"
+	"cloud.google.com/go/kms/apiv1/kmspb"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 )
 
@@ -37,7 +37,7 @@ func signAsymmetric(w io.Writer, name string, message string) error {
 	ctx := context.Background()
 	client, err := kms.NewKeyManagementClient(ctx)
 	if err != nil {
-		return fmt.Errorf("failed to create kms client: %v", err)
+		return fmt.Errorf("failed to create kms client: %w", err)
 	}
 	defer client.Close()
 
@@ -48,7 +48,7 @@ func signAsymmetric(w io.Writer, name string, message string) error {
 	// Calculate the digest of the message.
 	digest := sha256.New()
 	if _, err := digest.Write(plaintext); err != nil {
-		return fmt.Errorf("failed to create digest: %v", err)
+		return fmt.Errorf("failed to create digest: %w", err)
 	}
 
 	// Optional but recommended: Compute digest's CRC32C.
@@ -76,7 +76,7 @@ func signAsymmetric(w io.Writer, name string, message string) error {
 	// Call the API.
 	result, err := client.AsymmetricSign(ctx, req)
 	if err != nil {
-		return fmt.Errorf("failed to sign digest: %v", err)
+		return fmt.Errorf("failed to sign digest: %w", err)
 	}
 
 	// Optional, but recommended: perform integrity verification on result.
@@ -85,10 +85,9 @@ func signAsymmetric(w io.Writer, name string, message string) error {
 	if result.VerifiedDigestCrc32C == false {
 		return fmt.Errorf("AsymmetricSign: request corrupted in-transit")
 	}
-	// TODO(iamtamjam) Uncomment when this field is populated by the server
-	// if result.Name != req.Name {
-	//	return fmt.Errorf("AsymmetricSign: request corrupted in-transit")
-	// }
+	if result.Name != req.Name {
+		return fmt.Errorf("AsymmetricSign: request corrupted in-transit")
+	}
 	if int64(crc32c(result.Signature)) != result.SignatureCrc32C.Value {
 		return fmt.Errorf("AsymmetricSign: response corrupted in-transit")
 	}

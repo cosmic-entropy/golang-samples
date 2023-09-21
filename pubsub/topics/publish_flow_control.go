@@ -32,7 +32,7 @@ func publishWithFlowControlSettings(w io.Writer, projectID, topicID string) erro
 	ctx := context.Background()
 	client, err := pubsub.NewClient(ctx, projectID)
 	if err != nil {
-		return fmt.Errorf("pubsub.NewClient: %v", err)
+		return fmt.Errorf("pubsub.NewClient: %w", err)
 	}
 	defer client.Close()
 
@@ -40,7 +40,7 @@ func publishWithFlowControlSettings(w io.Writer, projectID, topicID string) erro
 	t.PublishSettings.FlowControlSettings = pubsub.FlowControlSettings{
 		MaxOutstandingMessages: 100,                     // default 1000
 		MaxOutstandingBytes:    10 * 1024 * 1024,        // default 0 (unlimited)
-		LimitExceededBehavior:  pubsub.FlowControlBlock, // default Block, other options: SignalError and Ignore
+		LimitExceededBehavior:  pubsub.FlowControlBlock, // default Ignore, other options: Block and SignalError
 	}
 
 	var wg sync.WaitGroup

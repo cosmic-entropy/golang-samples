@@ -21,7 +21,7 @@ import (
 	"io"
 
 	transcoder "cloud.google.com/go/video/transcoder/apiv1"
-	transcoderpb "google.golang.org/genproto/googleapis/cloud/video/transcoder/v1"
+	"cloud.google.com/go/video/transcoder/apiv1/transcoderpb"
 )
 
 // createJobTemplate creates a template for a job. See
@@ -34,7 +34,7 @@ func createJobTemplate(w io.Writer, projectID string, location string, templateI
 	ctx := context.Background()
 	client, err := transcoder.NewClient(ctx)
 	if err != nil {
-		return fmt.Errorf("NewClient: %v", err)
+		return fmt.Errorf("NewClient: %w", err)
 	}
 	defer client.Close()
 
@@ -102,7 +102,7 @@ func createJobTemplate(w io.Writer, projectID string, location string, templateI
 
 	response, err := client.CreateJobTemplate(ctx, req)
 	if err != nil {
-		return fmt.Errorf("CreateJobTemplate: %v", err)
+		return fmt.Errorf("CreateJobTemplate: %w", err)
 	}
 
 	fmt.Fprintf(w, "Job template: %v", response.GetName())

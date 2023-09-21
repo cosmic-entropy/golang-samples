@@ -23,7 +23,7 @@ import (
 	"google.golang.org/api/iterator"
 
 	livestream "cloud.google.com/go/video/livestream/apiv1"
-	livestreampb "google.golang.org/genproto/googleapis/cloud/video/livestream/v1"
+	"cloud.google.com/go/video/livestream/apiv1/livestreampb"
 )
 
 // listChannels lists all channels for a given location.
@@ -33,7 +33,7 @@ func listChannels(w io.Writer, projectID, location string) error {
 	ctx := context.Background()
 	client, err := livestream.NewClient(ctx)
 	if err != nil {
-		return fmt.Errorf("NewClient: %v", err)
+		return fmt.Errorf("NewClient: %w", err)
 	}
 	defer client.Close()
 
@@ -50,7 +50,7 @@ func listChannels(w io.Writer, projectID, location string) error {
 			break
 		}
 		if err != nil {
-			return fmt.Errorf("ListChannels: %v", err)
+			return fmt.Errorf("ListChannels: %w", err)
 		}
 		fmt.Fprintln(w, response.GetName())
 	}

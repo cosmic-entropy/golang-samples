@@ -21,7 +21,7 @@ import (
 	"fmt"
 
 	cloudtasks "cloud.google.com/go/cloudtasks/apiv2"
-	taskspb "google.golang.org/genproto/googleapis/cloud/tasks/v2"
+	taskspb "cloud.google.com/go/cloudtasks/apiv2/cloudtaskspb"
 )
 
 // createHTTPTaskWithToken constructs a task with a authorization token
@@ -32,7 +32,7 @@ func createHTTPTaskWithToken(projectID, locationID, queueID, url, email, message
 	ctx := context.Background()
 	client, err := cloudtasks.NewClient(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("NewClient: %v", err)
+		return nil, fmt.Errorf("NewClient: %w", err)
 	}
 	defer client.Close()
 
@@ -64,7 +64,7 @@ func createHTTPTaskWithToken(projectID, locationID, queueID, url, email, message
 
 	createdTask, err := client.CreateTask(ctx, req)
 	if err != nil {
-		return nil, fmt.Errorf("cloudtasks.CreateTask: %v", err)
+		return nil, fmt.Errorf("cloudtasks.CreateTask: %w", err)
 	}
 
 	return createdTask, nil

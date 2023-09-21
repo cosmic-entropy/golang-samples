@@ -22,7 +22,7 @@ import (
 	"io"
 
 	kms "cloud.google.com/go/kms/apiv1"
-	kmspb "google.golang.org/genproto/googleapis/cloud/kms/v1"
+	"cloud.google.com/go/kms/apiv1/kmspb"
 )
 
 // generateRandomBytes generates random bytes with entropy sourced from the
@@ -35,7 +35,7 @@ func generateRandomBytes(w io.Writer, location string, numBytes int32) error {
 	ctx := context.Background()
 	client, err := kms.NewKeyManagementClient(ctx)
 	if err != nil {
-		return fmt.Errorf("failed to create kms client: %v", err)
+		return fmt.Errorf("failed to create kms client: %w", err)
 	}
 	defer client.Close()
 
@@ -49,7 +49,7 @@ func generateRandomBytes(w io.Writer, location string, numBytes int32) error {
 	// Generate random bytes.
 	result, err := client.GenerateRandomBytes(ctx, req)
 	if err != nil {
-		return fmt.Errorf("failed to generate random bytes: %v", err)
+		return fmt.Errorf("failed to generate random bytes: %w", err)
 	}
 
 	// The data comes back as raw bytes, which may include non-printable

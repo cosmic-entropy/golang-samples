@@ -14,7 +14,7 @@
 
 package videostitcher
 
-// [START video_stitcher_get_vod_ad_tag_detail]
+// [START videostitcher_get_vod_ad_tag_detail]
 import (
 	"context"
 	"encoding/json"
@@ -22,7 +22,7 @@ import (
 	"io"
 
 	stitcher "cloud.google.com/go/video/stitcher/apiv1"
-	stitcherpb "google.golang.org/genproto/googleapis/cloud/video/stitcher/v1"
+	"cloud.google.com/go/video/stitcher/apiv1/stitcherpb"
 )
 
 // getVodAdTagDetail gets the specified ad tag detail for a video on demand (VOD) session.
@@ -34,7 +34,7 @@ func getVodAdTagDetail(w io.Writer, projectID, sessionID, adTagDetailID string) 
 	ctx := context.Background()
 	client, err := stitcher.NewVideoStitcherClient(ctx)
 	if err != nil {
-		return fmt.Errorf("stitcher.NewVideoStitcherClient: %v", err)
+		return fmt.Errorf("stitcher.NewVideoStitcherClient: %w", err)
 	}
 	defer client.Close()
 
@@ -44,15 +44,15 @@ func getVodAdTagDetail(w io.Writer, projectID, sessionID, adTagDetailID string) 
 	// Gets the ad tag detail.
 	response, err := client.GetVodAdTagDetail(ctx, req)
 	if err != nil {
-		return fmt.Errorf("client.GetVodAdTagDetail: %v", err)
+		return fmt.Errorf("client.GetVodAdTagDetail: %w", err)
 	}
 	b, err := json.MarshalIndent(response, "", " ")
 	if err != nil {
-		return fmt.Errorf("json.MarshalIndent: %v", err)
+		return fmt.Errorf("json.MarshalIndent: %w", err)
 	}
 
 	fmt.Fprintf(w, "VOD ad tag detail:\n%s", string(b))
 	return nil
 }
 
-// [END video_stitcher_get_vod_ad_tag_detail]
+// [END videostitcher_get_vod_ad_tag_detail]

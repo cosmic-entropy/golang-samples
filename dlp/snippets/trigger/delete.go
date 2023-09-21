@@ -21,19 +21,18 @@ import (
 	"io"
 
 	dlp "cloud.google.com/go/dlp/apiv2"
-	dlppb "google.golang.org/genproto/googleapis/privacy/dlp/v2"
+	"cloud.google.com/go/dlp/apiv2/dlppb"
 )
 
 // deleteTrigger deletes the given trigger.
 func deleteTrigger(w io.Writer, triggerID string) error {
-	// projectID := "my-project-id"
 	// triggerID := "my-trigger"
 
 	ctx := context.Background()
 
 	client, err := dlp.NewClient(ctx)
 	if err != nil {
-		return fmt.Errorf("dlp.NewClient: %v", err)
+		return fmt.Errorf("dlp.NewClient: %w", err)
 	}
 	defer client.Close()
 
@@ -42,7 +41,7 @@ func deleteTrigger(w io.Writer, triggerID string) error {
 	}
 
 	if err := client.DeleteJobTrigger(ctx, req); err != nil {
-		return fmt.Errorf("DeleteJobTrigger: %v", err)
+		return fmt.Errorf("DeleteJobTrigger: %w", err)
 	}
 	fmt.Fprintf(w, "Successfully deleted trigger %v", triggerID)
 	return nil

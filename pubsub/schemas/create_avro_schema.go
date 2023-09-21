@@ -19,7 +19,7 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"io/ioutil"
+	"os"
 
 	"cloud.google.com/go/pubsub"
 )
@@ -32,11 +32,11 @@ func createAvroSchema(w io.Writer, projectID, schemaID, avscFile string) error {
 	ctx := context.Background()
 	client, err := pubsub.NewSchemaClient(ctx, projectID)
 	if err != nil {
-		return fmt.Errorf("pubsub.NewSchemaClient: %v", err)
+		return fmt.Errorf("pubsub.NewSchemaClient: %w", err)
 	}
 	defer client.Close()
 
-	avscSource, err := ioutil.ReadFile(avscFile)
+	avscSource, err := os.ReadFile(avscFile)
 	if err != nil {
 		return fmt.Errorf("error reading from file: %s", avscFile)
 	}
@@ -47,7 +47,7 @@ func createAvroSchema(w io.Writer, projectID, schemaID, avscFile string) error {
 	}
 	s, err := client.CreateSchema(ctx, schemaID, config)
 	if err != nil {
-		return fmt.Errorf("CreateSchema: %v", err)
+		return fmt.Errorf("CreateSchema: %w", err)
 	}
 	fmt.Fprintf(w, "Schema created: %#v\n", s)
 	return nil

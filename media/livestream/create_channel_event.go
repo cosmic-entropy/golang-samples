@@ -23,7 +23,7 @@ import (
 	"github.com/golang/protobuf/ptypes/duration"
 
 	livestream "cloud.google.com/go/video/livestream/apiv1"
-	livestreampb "google.golang.org/genproto/googleapis/cloud/video/livestream/v1"
+	"cloud.google.com/go/video/livestream/apiv1/livestreampb"
 )
 
 // createChannelEvent creates a channel event. An event is a sub-resource of a
@@ -38,7 +38,7 @@ func createChannelEvent(w io.Writer, projectID, location, channelID, eventID str
 	ctx := context.Background()
 	client, err := livestream.NewClient(ctx)
 	if err != nil {
-		return fmt.Errorf("NewClient: %v", err)
+		return fmt.Errorf("NewClient: %w", err)
 	}
 	defer client.Close()
 
@@ -59,7 +59,7 @@ func createChannelEvent(w io.Writer, projectID, location, channelID, eventID str
 	// Creates the channel event.
 	response, err := client.CreateEvent(ctx, req)
 	if err != nil {
-		return fmt.Errorf("CreateEvent: %v", err)
+		return fmt.Errorf("CreateEvent: %w", err)
 	}
 
 	fmt.Fprintf(w, "Channel event: %v", response.Name)

@@ -21,7 +21,7 @@ import (
 	"io"
 
 	datacatalog "cloud.google.com/go/datacatalog/apiv1beta1"
-	datacatalogpb "google.golang.org/genproto/googleapis/cloud/datacatalog/v1beta1"
+	"cloud.google.com/go/datacatalog/apiv1beta1/datacatalogpb"
 )
 
 // getPolicyTag prints information about a given policy tag.
@@ -30,7 +30,7 @@ func getPolicyTag(w io.Writer, policyTagID string) error {
 	ctx := context.Background()
 	policyClient, err := datacatalog.NewPolicyTagManagerClient(ctx)
 	if err != nil {
-		return fmt.Errorf("datacatalog.NewPolicyTagManagerClient: %v", err)
+		return fmt.Errorf("datacatalog.NewPolicyTagManagerClient: %w", err)
 	}
 	defer policyClient.Close()
 
@@ -39,7 +39,7 @@ func getPolicyTag(w io.Writer, policyTagID string) error {
 	}
 	resp, err := policyClient.GetPolicyTag(ctx, req)
 	if err != nil {
-		return fmt.Errorf("GetPolicyTag: %v", err)
+		return fmt.Errorf("GetPolicyTag: %w", err)
 	}
 	fmt.Fprintf(w, "PolicyTag %s has Display Name %s", resp.Name, resp.DisplayName)
 	if resp.ParentPolicyTag != "" {

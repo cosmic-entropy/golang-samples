@@ -23,8 +23,8 @@ import (
 	"time"
 
 	monitoring "cloud.google.com/go/monitoring/apiv3"
+	"cloud.google.com/go/monitoring/apiv3/v2/monitoringpb"
 	"github.com/GoogleCloudPlatform/golang-samples/internal/testutil"
-	monitoringpb "google.golang.org/genproto/googleapis/monitoring/v3"
 )
 
 func TestDeleteChannel(t *testing.T) {
@@ -70,7 +70,7 @@ func createChannel(projectID string) (*monitoringpb.NotificationChannel, error) 
 
 	channel, err := client.CreateNotificationChannel(ctx, req)
 	if err != nil {
-		return nil, fmt.Errorf("CreateNotificationChannel: %v", err)
+		return nil, fmt.Errorf("CreateNotificationChannel: %w", err)
 	}
 
 	return channel, nil

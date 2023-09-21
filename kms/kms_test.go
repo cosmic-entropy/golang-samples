@@ -1,4 +1,4 @@
-// Copyright 2020 Google LLC
+// Copyright 2023 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,10 +29,11 @@ import (
 	"os"
 	"strings"
 	"testing"
+	"time"
 
 	kms "cloud.google.com/go/kms/apiv1"
+	"cloud.google.com/go/kms/apiv1/kmspb"
 	"github.com/GoogleCloudPlatform/golang-samples/internal/testutil"
-	kmspb "google.golang.org/genproto/googleapis/cloud/kms/v1"
 )
 
 var fixture *kmsFixture
@@ -421,6 +422,21 @@ func TestGetPublicKey(t *testing.T) {
 	}
 }
 
+func TestGetPublicKeyJwk(t *testing.T) {
+	testutil.SystemTest(t)
+
+	name := fmt.Sprintf("%s/cryptoKeyVersions/1", fixture.AsymmetricDecryptKeyName)
+
+	var b bytes.Buffer
+	if err := getPublicKeyJwk(&b, name); err != nil {
+		t.Fatal(err)
+	}
+
+	if got, want := b.String(), "kty"; !strings.Contains(got, want) {
+		t.Errorf("getPublicKeyJwk: expected %q to contain %q", got, want)
+	}
+}
+
 func TestIAMAddMember(t *testing.T) {
 	testutil.SystemTest(t)
 
@@ -481,6 +497,73 @@ func TestIAMRemoveMember(t *testing.T) {
 
 	if got, want := b.String(), "Updated IAM"; !strings.Contains(got, want) {
 		t.Errorf("iamRemoveMember: expected %q to contain %q", got, want)
+	}
+}
+
+func TestImportEndToEnd(t *testing.T) {
+	testutil.SystemTest(t)
+	var b bytes.Buffer
+
+	// Create key for import.
+	cryptoKeyID := fixture.RandomID()
+	if err := createKeyForImport(&b, fixture.KeyRingName, cryptoKeyID); err != nil {
+		t.Fatal(err)
+	}
+	if got, want := b.String(), "Created key"; !strings.Contains(got, want) {
+		t.Fatalf("createKeyForImport: expected %q to contain %q", got, want)
+	}
+	cryptoKeyName := fmt.Sprintf("%s/cryptoKeys/%s", fixture.KeyRingName, cryptoKeyID)
+
+	// Create import job.
+	b.Reset()
+	importJobID := fixture.RandomID()
+	if err := createImportJob(&b, fixture.KeyRingName, importJobID); err != nil {
+		t.Fatal(err)
+	}
+	if got, want := b.String(), "Created import job"; !strings.Contains(got, want) {
+		t.Fatalf("createImportJob: expected %q to contain %q", got, want)
+	}
+	importJobName := fmt.Sprintf("%s/importJobs/%s", fixture.KeyRingName, importJobID)
+
+	// Check import job state (wait for ACTIVE).
+	b.Reset()
+	for !strings.Contains(b.String(), "ACTIVE") {
+		if err := checkStateImportJob(&b, importJobName); err != nil {
+			t.Fatal(err)
+		}
+
+		time.Sleep(time.Second * 2)
+	}
+
+	// Import the key.
+	b.Reset()
+	if err := importManuallyWrappedKey(&b, importJobName, cryptoKeyName); err != nil {
+		t.Fatal(err)
+	}
+
+	if got, want := b.String(), "Created crypto key version"; !strings.Contains(got, want) {
+		t.Fatalf("checkStateImportedKey: expected %q to contain %q", got, want)
+	}
+	cryptoKeyVersionName := fmt.Sprintf("%s/cryptoKeyVersions/1", cryptoKeyName)
+
+	// Wait for the key to finish importing.
+	importInProgressStatus := kmspb.CryptoKeyVersion_CryptoKeyVersionState_name[int32(kmspb.CryptoKeyVersion_PENDING_IMPORT)]
+	for {
+		b.Reset()
+		if err := checkStateImportedKey(&b, cryptoKeyVersionName); err != nil {
+			t.Fatal(err)
+		}
+
+		got := b.String()
+		if want := "Current state"; !strings.Contains(got, want) {
+			t.Errorf("checkStateImportedKey: expected %q to contain %q", got, want)
+		}
+
+		if !strings.Contains(got, importInProgressStatus) {
+			break
+		}
+
+		time.Sleep(time.Second * 2)
 	}
 }
 

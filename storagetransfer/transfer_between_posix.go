@@ -22,7 +22,7 @@ import (
 	"io"
 
 	storagetransfer "cloud.google.com/go/storagetransfer/apiv1"
-	storagetransferpb "google.golang.org/genproto/googleapis/storagetransfer/v1"
+	"cloud.google.com/go/storagetransfer/apiv1/storagetransferpb"
 )
 
 func transferBetweenPosix(w io.Writer, projectID string, sourceAgentPoolName string, sinkAgentPoolName string, rootDirectory string, destinationDirectory string, bucketName string) (*storagetransferpb.TransferJob, error) {
@@ -47,7 +47,7 @@ func transferBetweenPosix(w io.Writer, projectID string, sourceAgentPoolName str
 	ctx := context.Background()
 	client, err := storagetransfer.NewClient(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("storagetransfer.NewClient: %v", err)
+		return nil, fmt.Errorf("storagetransfer.NewClient: %w", err)
 	}
 	defer client.Close()
 
@@ -73,13 +73,13 @@ func transferBetweenPosix(w io.Writer, projectID string, sourceAgentPoolName str
 
 	resp, err := client.CreateTransferJob(ctx, req)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create transfer job: %v", err)
+		return nil, fmt.Errorf("failed to create transfer job: %w", err)
 	}
 	if _, err = client.RunTransferJob(ctx, &storagetransferpb.RunTransferJobRequest{
 		ProjectId: projectID,
 		JobName:   resp.Name,
 	}); err != nil {
-		return nil, fmt.Errorf("failed to run transfer job: %v", err)
+		return nil, fmt.Errorf("failed to run transfer job: %w", err)
 	}
 	fmt.Fprintf(w, "Created and ran transfer job from %v to %v with name %v", rootDirectory, destinationDirectory, resp.Name)
 	return resp, nil

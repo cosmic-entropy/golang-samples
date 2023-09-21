@@ -24,9 +24,9 @@ import (
 
 	"cloud.google.com/go/bigquery"
 	datacatalog "cloud.google.com/go/datacatalog/apiv1"
+	"cloud.google.com/go/datacatalog/apiv1/datacatalogpb"
 	"github.com/GoogleCloudPlatform/golang-samples/bigquery/snippets/bqtestutil"
 	"github.com/GoogleCloudPlatform/golang-samples/internal/testutil"
-	datacatalogpb "google.golang.org/genproto/googleapis/cloud/datacatalog/v1"
 )
 
 func TestApp(t *testing.T) {
@@ -132,7 +132,7 @@ func cleanupDataCatalog(ctx context.Context, stdOut string) error {
 
 	client, err := datacatalog.NewClient(ctx)
 	if err != nil {
-		return fmt.Errorf("datacatalog.NewClient: %v", err)
+		return fmt.Errorf("datacatalog.NewClient: %w", err)
 	}
 
 	return client.DeleteTagTemplate(ctx, &datacatalogpb.DeleteTagTemplateRequest{

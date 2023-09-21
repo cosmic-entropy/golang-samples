@@ -21,11 +21,11 @@ import (
 	"io"
 
 	securitycenter "cloud.google.com/go/securitycenter/apiv1"
+	"cloud.google.com/go/securitycenter/apiv1/securitycenterpb"
 	"google.golang.org/api/iterator"
-	securitycenterpb "google.golang.org/genproto/googleapis/cloud/securitycenter/v1"
 )
 
-// listFindings prints all findings in orgID to w.  orgID is the numeric
+// listFindings prints all findings in orgID to w. orgID is the numeric
 // identifier of the organization.
 func listFindings(w io.Writer, orgID string) error {
 	// orgID := "12321311"
@@ -33,12 +33,16 @@ func listFindings(w io.Writer, orgID string) error {
 	ctx := context.Background()
 	client, err := securitycenter.NewClient(ctx)
 	if err != nil {
-		return fmt.Errorf("securitycenter.NewClient: %v", err)
+		return fmt.Errorf("securitycenter.NewClient: %w", err)
 	}
 	defer client.Close() // Closing the client safely cleans up background resources.
 
 	req := &securitycenterpb.ListFindingsRequest{
 		// List findings across all sources.
+		// Parent must be in one of the following formats:
+		//		"organizations/{orgId}/sources/-"
+		//		"projects/{projectId}/sources/-"
+		//		"folders/{folderId}/sources/-"
 		Parent: fmt.Sprintf("organizations/%s/sources/-", orgID),
 	}
 	it := client.ListFindings(ctx, req)
@@ -48,7 +52,7 @@ func listFindings(w io.Writer, orgID string) error {
 			break
 		}
 		if err != nil {
-			return fmt.Errorf("it.Next: %v", err)
+			return fmt.Errorf("it.Next: %w", err)
 		}
 		finding := result.Finding
 		fmt.Fprintf(w, "Finding Name: %s, ", finding.Name)

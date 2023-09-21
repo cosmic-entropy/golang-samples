@@ -22,28 +22,33 @@ import (
 	"time"
 
 	securitycenter "cloud.google.com/go/securitycenter/apiv1"
+	"cloud.google.com/go/securitycenter/apiv1/securitycenterpb"
 	"github.com/golang/protobuf/ptypes"
 	"google.golang.org/api/iterator"
-	securitycenterpb "google.golang.org/genproto/googleapis/cloud/securitycenter/v1"
 )
 
 // listFindingsAtTime prints findings that where present for a specific source
 // as of five days ago to w. sourceName is the full resource name of the
 // source to search for findings under.
 func listFindingsAtTime(w io.Writer, sourceName string) error {
-	// Specific source.
-	// sourceName := "organizations/111122222444/sources/1234"
-	// All sources.
-	// sourceName := "organizations/111122222444/sources/-"
+	// Specific source:
+	// 		sourceName := "{parent}/sources/{sourceId}"
+	// All sources:
+	// 		sourceName := "{parent}/sources/-"
+	// where,
+	// Parent must be in one of the following formats:
+	//		"organizations/{orgId}"
+	//		"projects/{projectId}"
+	//		"folders/{folderId}"
 	ctx := context.Background()
 	client, err := securitycenter.NewClient(ctx)
 	if err != nil {
-		return fmt.Errorf("securitycenter.NewClient: %v", err)
+		return fmt.Errorf("securitycenter.NewClient: %w", err)
 	}
 	defer client.Close() // Closing the client safely cleans up background resources.
 	fiveDaysAgo, err := ptypes.TimestampProto(time.Now().AddDate(0, 0, -5))
 	if err != nil {
-		return fmt.Errorf("Error converting five days ago: %v", err)
+		return fmt.Errorf("Error converting five days ago: %w", err)
 	}
 
 	req := &securitycenterpb.ListFindingsRequest{
@@ -57,7 +62,7 @@ func listFindingsAtTime(w io.Writer, sourceName string) error {
 			break
 		}
 		if err != nil {
-			return fmt.Errorf("it.Next: %v", err)
+			return fmt.Errorf("it.Next: %w", err)
 		}
 		finding := result.Finding
 		fmt.Fprintf(w, "Finding Name: %s, ", finding.Name)

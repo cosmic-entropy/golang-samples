@@ -21,7 +21,7 @@ import (
 	"io"
 
 	securitycenter "cloud.google.com/go/securitycenter/apiv1"
-	securitycenterpb "google.golang.org/genproto/googleapis/cloud/securitycenter/v1"
+	"cloud.google.com/go/securitycenter/apiv1/securitycenterpb"
 )
 
 func deleteNotificationConfig(w io.Writer, orgID string, notificationConfigID string) error {
@@ -32,17 +32,22 @@ func deleteNotificationConfig(w io.Writer, orgID string, notificationConfigID st
 	client, err := securitycenter.NewClient(ctx)
 
 	if err != nil {
-		return fmt.Errorf("securitycenter.NewClient: %v", err)
+		return fmt.Errorf("securitycenter.NewClient: %w", err)
 	}
 	defer client.Close()
 
-	name := fmt.Sprintf("organizations/%s/notificationConfigs/%s", orgID, notificationConfigID)
+	// Parent must be in one of the following formats:
+	//		"organizations/{orgId}"
+	//		"projects/{projectId}"
+	//		"folders/{folderId}"
+	parent := fmt.Sprintf("organizations/%s", orgID)
+	name := fmt.Sprintf("%s/notificationConfigs/%s", parent, notificationConfigID)
 	req := &securitycenterpb.DeleteNotificationConfigRequest{
 		Name: name,
 	}
 
 	if err = client.DeleteNotificationConfig(ctx, req); err != nil {
-		return fmt.Errorf("Failed to retrieve notification config: %v", err)
+		return fmt.Errorf("Failed to retrieve notification config: %w", err)
 	}
 	fmt.Fprintln(w, "Deleted config: ", name)
 

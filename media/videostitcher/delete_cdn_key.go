@@ -14,29 +14,29 @@
 
 package videostitcher
 
-// [START video_stitcher_delete_cdn_key]
+// [START videostitcher_delete_cdn_key]
 import (
 	"context"
 	"fmt"
 	"io"
 
 	stitcher "cloud.google.com/go/video/stitcher/apiv1"
-	stitcherpb "google.golang.org/genproto/googleapis/cloud/video/stitcher/v1"
+	"cloud.google.com/go/video/stitcher/apiv1/stitcherpb"
 )
 
-// deleteCdnKey deletes a CDN key.
-func deleteCdnKey(w io.Writer, projectID, cdnKeyID string) error {
+// deleteCDNKey deletes a CDN key.
+func deleteCDNKey(w io.Writer, projectID, keyID string) error {
 	// projectID := "my-project-id"
-	// cdnKeyID := "my-cdn-key"
+	// keyID := "my-cdn-key"
 	location := "us-central1"
 	ctx := context.Background()
 	client, err := stitcher.NewVideoStitcherClient(ctx)
 	if err != nil {
-		return fmt.Errorf("stitcher.NewVideoStitcherClient: %v", err)
+		return fmt.Errorf("stitcher.NewVideoStitcherClient: %w", err)
 	}
 	defer client.Close()
 
-	name := fmt.Sprintf("projects/%s/locations/%s/cdnKeys/%s", projectID, location, cdnKeyID)
+	name := fmt.Sprintf("projects/%s/locations/%s/cdnKeys/%s", projectID, location, keyID)
 
 	req := &stitcherpb.DeleteCdnKeyRequest{
 		Name: name,
@@ -44,11 +44,11 @@ func deleteCdnKey(w io.Writer, projectID, cdnKeyID string) error {
 	// Deletes the CDN key.
 	err = client.DeleteCdnKey(ctx, req)
 	if err != nil {
-		return fmt.Errorf("client.DeleteCdnKey: %v", err)
+		return fmt.Errorf("client.DeleteCdnKey: %w", err)
 	}
 
 	fmt.Fprintf(w, "Deleted CDN key: %s", name)
 	return nil
 }
 
-// [END video_stitcher_delete_cdn_key]
+// [END videostitcher_delete_cdn_key]

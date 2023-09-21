@@ -14,14 +14,14 @@
 
 package videostitcher
 
-// [START video_stitcher_create_live_session]
+// [START videostitcher_create_live_session]
 import (
 	"context"
 	"fmt"
 	"io"
 
 	stitcher "cloud.google.com/go/video/stitcher/apiv1"
-	stitcherpb "google.golang.org/genproto/googleapis/cloud/video/stitcher/v1"
+	"cloud.google.com/go/video/stitcher/apiv1/stitcherpb"
 )
 
 // createLiveSession creates a livestream session in which to insert ads.
@@ -42,7 +42,7 @@ func createLiveSession(w io.Writer, projectID, sourceURI, slateID string) error 
 	ctx := context.Background()
 	client, err := stitcher.NewVideoStitcherClient(ctx)
 	if err != nil {
-		return fmt.Errorf("stitcher.NewVideoStitcherClient: %v", err)
+		return fmt.Errorf("stitcher.NewVideoStitcherClient: %w", err)
 	}
 	defer client.Close()
 
@@ -60,7 +60,7 @@ func createLiveSession(w io.Writer, projectID, sourceURI, slateID string) error 
 	// Creates the live session.
 	response, err := client.CreateLiveSession(ctx, req)
 	if err != nil {
-		return fmt.Errorf("client.CreateLiveSession: %v", err)
+		return fmt.Errorf("client.CreateLiveSession: %w", err)
 	}
 
 	fmt.Fprintf(w, "Live session: %v\n", response.GetName())
@@ -68,4 +68,4 @@ func createLiveSession(w io.Writer, projectID, sourceURI, slateID string) error 
 	return nil
 }
 
-// [END video_stitcher_create_live_session]
+// [END videostitcher_create_live_session]

@@ -24,10 +24,10 @@ import (
 	"log"
 
 	monitoring "cloud.google.com/go/monitoring/apiv3"
+	"cloud.google.com/go/monitoring/apiv3/v2/monitoringpb"
 	"github.com/golang/protobuf/jsonpb"
 	"github.com/golang/protobuf/ptypes/wrappers"
 	"google.golang.org/api/iterator"
-	monitoringpb "google.golang.org/genproto/googleapis/monitoring/v3"
 	fieldmask "google.golang.org/genproto/protobuf/field_mask"
 )
 
@@ -300,7 +300,7 @@ func replaceChannels(w io.Writer, projectID, alertPolicyID string, channelIDs []
 		},
 	}
 	if _, err := client.UpdateAlertPolicy(ctx, req); err != nil {
-		return fmt.Errorf("UpdateAlertPolicy: %v", err)
+		return fmt.Errorf("UpdateAlertPolicy: %w", err)
 	}
 	fmt.Fprintf(w, "Successfully replaced channels.")
 	return nil

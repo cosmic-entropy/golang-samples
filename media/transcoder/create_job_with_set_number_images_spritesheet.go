@@ -21,7 +21,7 @@ import (
 	"io"
 
 	transcoder "cloud.google.com/go/video/transcoder/apiv1"
-	transcoderpb "google.golang.org/genproto/googleapis/cloud/video/transcoder/v1"
+	"cloud.google.com/go/video/transcoder/apiv1/transcoderpb"
 )
 
 // createJobWithSetNumberImagesSpritesheet creates a job from an ad-hoc configuration and generates
@@ -34,7 +34,7 @@ func createJobWithSetNumberImagesSpritesheet(w io.Writer, projectID string, loca
 	ctx := context.Background()
 	client, err := transcoder.NewClient(ctx)
 	if err != nil {
-		return fmt.Errorf("NewClient: %v", err)
+		return fmt.Errorf("NewClient: %w", err)
 	}
 	defer client.Close()
 
@@ -108,7 +108,7 @@ func createJobWithSetNumberImagesSpritesheet(w io.Writer, projectID string, loca
 	// See https://cloud.google.com/transcoder/docs/how-to/jobs#check_job_status for more info.
 	response, err := client.CreateJob(ctx, req)
 	if err != nil {
-		return fmt.Errorf("createJobWithSetNumberImagesSpritesheet: %v", err)
+		return fmt.Errorf("createJobWithSetNumberImagesSpritesheet: %w", err)
 	}
 
 	fmt.Fprintf(w, "Job: %v", response.GetName())

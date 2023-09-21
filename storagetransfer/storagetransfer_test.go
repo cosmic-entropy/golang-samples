@@ -25,22 +25,27 @@ import (
 	"time"
 
 	"cloud.google.com/go/iam"
+	"cloud.google.com/go/pubsub"
 	"cloud.google.com/go/storage"
 	storagetransfer "cloud.google.com/go/storagetransfer/apiv1"
+	"cloud.google.com/go/storagetransfer/apiv1/storagetransferpb"
+	azblob "github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
+	"github.com/GoogleCloudPlatform/golang-samples/internal/testutil"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3/s3manager"
-	storagetransferpb "google.golang.org/genproto/googleapis/storagetransfer/v1"
-
-	"github.com/GoogleCloudPlatform/golang-samples/internal/testutil"
 	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/aws/aws-sdk-go/service/sqs"
 )
 
 var sc *storage.Client
 var sts *storagetransfer.Client
+var sess *session.Session
 var s3Bucket string
+var azureContainer string
 var gcsSourceBucket string
 var gcsSinkBucket string
+var stsServiceAccountEmail string
 
 func TestMain(m *testing.M) {
 	// Initialize global vars
@@ -74,11 +79,21 @@ func TestMain(m *testing.M) {
 	}
 	defer sts.Close()
 
-	grantSTSPermissions(gcsSourceBucket, tc.ProjectID, sts, sc)
-	grantSTSPermissions(gcsSinkBucket, tc.ProjectID, sts, sc)
+	req := &storagetransferpb.GetGoogleServiceAccountRequest{
+		ProjectId: tc.ProjectID,
+	}
+
+	resp, err := sts.GetGoogleServiceAccount(ctx, req)
+	if err != nil {
+		log.Fatalf("error getting service account: %v", err)
+	}
+	stsServiceAccountEmail = resp.AccountEmail
+
+	grantSTSPermissions(gcsSourceBucket, sc)
+	grantSTSPermissions(gcsSinkBucket, sc)
 
 	s3Bucket = testutil.UniqueBucketName("stss3bucket")
-	sess, err := session.NewSession(&aws.Config{
+	sess, err = session.NewSession(&aws.Config{
 		Region: aws.String("us-west-2")},
 	)
 	s3c := s3.New(sess)
@@ -87,6 +102,19 @@ func TestMain(m *testing.M) {
 	})
 	if err != nil {
 		log.Fatalf("couldn't create S3 bucket: %v", err)
+	}
+
+	connectionString := os.Getenv("AZURE_CONNECTION_STRING") +
+		";" + "AccountName=" + os.Getenv("AZURE_STORAGE_ACCOUNT")
+	azClient, err := azblob.NewClientFromConnectionString(connectionString, nil)
+	if err != nil {
+		log.Fatal("Couldn't create Azure client: " + err.Error())
+	}
+	azureContainer = testutil.UniqueBucketName("azurebucket")
+
+	azClient.CreateContainer(ctx, azureContainer, nil)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	// Run tests
@@ -109,6 +137,11 @@ func TestMain(m *testing.M) {
 	})
 	if err != nil {
 		log.Printf("couldn't delete S3 bucket: %v", err)
+	}
+
+	_, err = azClient.DeleteContainer(ctx, azureContainer, nil)
+	if err != nil {
+		log.Printf("couldn't delete Azure bucket: %v", err)
 	}
 
 	os.Exit(exit)
@@ -305,20 +338,143 @@ func TestTransferUsingManifest(t *testing.T) {
 	}
 }
 
-func grantSTSPermissions(bucketName string, projectID string, sts *storagetransfer.Client, str *storage.Client) {
+func TestTransferFromS3CompatibleSource(t *testing.T) {
+	tc := testutil.SystemTest(t)
+
+	buf := new(bytes.Buffer)
+
+	sourceAgentPoolName := "" //use default agent pool
+	sourcePath := ""          //use root directory
+	gcsPath := ""             //use root directory
+
+	resp, err := transferFromS3CompatibleSource(buf, tc.ProjectID, sourceAgentPoolName, s3Bucket, sourcePath, gcsSinkBucket, gcsPath)
+
+	if err != nil {
+		t.Errorf("transfer_from_s3_compatible_source: %#v", err)
+	}
+	defer cleanupSTSJob(resp, tc.ProjectID)
+
+	got := buf.String()
+	if want := "transferJobs/"; !strings.Contains(got, want) {
+		t.Errorf("transfer_from_s3_compatible_source: got %q, want %q", got, want)
+	}
+}
+
+func TestTransferFromAzure(t *testing.T) {
+	tc := testutil.SystemTest(t)
+	buf := new(bytes.Buffer)
+
+	accountName := os.Getenv("AZURE_STORAGE_ACCOUNT")
+	resp, err := transferFromAzure(buf, tc.ProjectID, accountName, azureContainer, gcsSinkBucket)
+	if err != nil {
+		t.Errorf("transfer_from_azure: %#v", err)
+	}
+	defer cleanupSTSJob(resp, tc.ProjectID)
+
+	got := buf.String()
+	if want := "transferJobs/"; !strings.Contains(got, want) {
+		t.Errorf("transfer_from_azure: got %q, want %q", got, want)
+	}
+}
+
+func TestCreateEventDrivenGCSTransfer(t *testing.T) {
+	tc := testutil.SystemTest(t)
+	buf := new(bytes.Buffer)
 	ctx := context.Background()
 
-	req := &storagetransferpb.GetGoogleServiceAccountRequest{
-		ProjectId: projectID,
-	}
+	pubSubTopicId := testutil.UniqueBucketName("pubsubtopic")
 
-	resp, err := sts.GetGoogleServiceAccount(ctx, req)
+	pubsubClient, err := pubsub.NewClient(ctx, tc.ProjectID)
 	if err != nil {
-		log.Fatalf("error getting service account")
+		log.Fatalf("Coudln't create pubsub client: " + err.Error())
 	}
-	email := resp.AccountEmail
+	defer pubsubClient.Close()
 
-	identity := "serviceAccount:" + email
+	topic, err := pubsubClient.CreateTopic(ctx, pubSubTopicId)
+	if err != nil {
+		log.Fatalf("Coudln't create pubsub topic: " + err.Error())
+	}
+	defer topic.Delete(ctx)
+
+	policy, err := topic.IAM().Policy(ctx)
+	if err != nil {
+		log.Fatalf("Couldn't get pubsub topic policy: " + err.Error())
+	}
+	policy.Add("serviceAccount:"+stsServiceAccountEmail, "roles/pubsub.subscriber")
+	if err := topic.IAM().SetPolicy(ctx, policy); err != nil {
+		log.Fatalf("Couldn't set pubsub topic policy: " + err.Error())
+	}
+
+	subId := testutil.UniqueBucketName("pubsubsubscription")
+
+	sub, err := pubsubClient.CreateSubscription(ctx, subId, pubsub.SubscriptionConfig{
+		Topic:       topic,
+		AckDeadline: 20 * time.Second,
+	})
+	if err != nil {
+		log.Fatalf("Couldn't create pubsub subscription: " + err.Error())
+	}
+
+	pubSubSubscriptionID := sub.String()
+
+	resp, err := createEventDrivenGCSTransfer(buf, tc.ProjectID, gcsSourceBucket, gcsSinkBucket, pubSubSubscriptionID)
+	if err != nil {
+		t.Errorf("create_event_driven_gcs_transfer: %#v", err)
+	}
+	defer cleanupSTSJob(resp, tc.ProjectID)
+
+	got := buf.String()
+	if want := "transferJobs/"; !strings.Contains(got, want) {
+		t.Errorf("create_event_driven_gcs_transfer: got %q, want %q", got, want)
+	}
+}
+
+func TestCreateEventDrivenAWSTransfer(t *testing.T) {
+	tc := testutil.SystemTest(t)
+	buf := new(bytes.Buffer)
+
+	queue := testutil.UniqueBucketName("stssqsqueue")
+	sqsClient := sqs.New(sess)
+	result, err := sqsClient.CreateQueue(&sqs.CreateQueueInput{
+		QueueName: &queue,
+		Attributes: map[string]*string{
+			"DelaySeconds":           aws.String("60"),
+			"MessageRetentionPeriod": aws.String("86400"),
+		},
+	})
+	if err != nil {
+		log.Fatalf("couldn't create SQS queue: %v", err)
+	}
+	defer sqsClient.DeleteQueue(&sqs.DeleteQueueInput{
+		QueueUrl: result.QueueUrl,
+	})
+
+	attributes, err := sqsClient.GetQueueAttributes(&sqs.GetQueueAttributesInput{
+		AttributeNames: []*string{aws.String("QueueArn")},
+		QueueUrl:       result.QueueUrl,
+	})
+	if err != nil {
+		log.Fatalf("couldn't get SQS queue attributes: %v", err)
+	}
+
+	sqsQueueARN := *attributes.Attributes["QueueArn"]
+
+	resp, err := createEventDrivenAWSTransfer(buf, tc.ProjectID, s3Bucket, gcsSinkBucket, sqsQueueARN)
+	if err != nil {
+		t.Errorf("create_event_driven_aws_transfer: %#v", err)
+	}
+	defer cleanupSTSJob(resp, tc.ProjectID)
+
+	got := buf.String()
+	if want := "transferJobs/"; !strings.Contains(got, want) {
+		t.Errorf("create_event_driven_aws_transfer: got %q, want %q", got, want)
+	}
+}
+
+func grantSTSPermissions(bucketName string, str *storage.Client) {
+	ctx := context.Background()
+
+	identity := "serviceAccount:" + stsServiceAccountEmail
 
 	bucket := str.Bucket(bucketName)
 	policy, err := bucket.IAM().Policy(ctx)

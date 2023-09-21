@@ -14,7 +14,7 @@
 
 package videostitcher
 
-// [START video_stitcher_get_slate]
+// [START videostitcher_get_slate]
 import (
 	"context"
 	"encoding/json"
@@ -22,7 +22,7 @@ import (
 	"io"
 
 	stitcher "cloud.google.com/go/video/stitcher/apiv1"
-	stitcherstreampb "google.golang.org/genproto/googleapis/cloud/video/stitcher/v1"
+	stitcherstreampb "cloud.google.com/go/video/stitcher/apiv1/stitcherpb"
 )
 
 // getSlate gets a previously-created slate.
@@ -33,7 +33,7 @@ func getSlate(w io.Writer, projectID, slateID string) error {
 	ctx := context.Background()
 	client, err := stitcher.NewVideoStitcherClient(ctx)
 	if err != nil {
-		return fmt.Errorf("stitcher.NewVideoStitcherClient: %v", err)
+		return fmt.Errorf("stitcher.NewVideoStitcherClient: %w", err)
 	}
 	defer client.Close()
 
@@ -43,15 +43,15 @@ func getSlate(w io.Writer, projectID, slateID string) error {
 
 	response, err := client.GetSlate(ctx, req)
 	if err != nil {
-		return fmt.Errorf("client.GetSlate: %v", err)
+		return fmt.Errorf("client.GetSlate: %w", err)
 	}
 	b, err := json.MarshalIndent(response, "", " ")
 	if err != nil {
-		return fmt.Errorf("json.MarshalIndent: %v", err)
+		return fmt.Errorf("json.MarshalIndent: %w", err)
 	}
 
 	fmt.Fprintf(w, "Slate:\n%s", string(b))
 	return nil
 }
 
-// [END video_stitcher_get_slate]
+// [END videostitcher_get_slate]

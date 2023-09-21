@@ -22,7 +22,7 @@ import (
 	"io"
 
 	automl "cloud.google.com/go/automl/apiv1"
-	automlpb "google.golang.org/genproto/googleapis/cloud/automl/v1"
+	"cloud.google.com/go/automl/apiv1/automlpb"
 )
 
 // getOperationStatus gets an operation's status.
@@ -35,7 +35,7 @@ func getOperationStatus(w io.Writer, projectID string, location string, datasetI
 	ctx := context.Background()
 	client, err := automl.NewClient(ctx)
 	if err != nil {
-		return fmt.Errorf("NewClient: %v", err)
+		return fmt.Errorf("NewClient: %w", err)
 	}
 	defer client.Close()
 

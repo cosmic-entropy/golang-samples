@@ -24,20 +24,21 @@ import (
 	computepb "google.golang.org/genproto/googleapis/cloud/compute/v1"
 )
 
-// setDiskAutodelete sets the autodelete flag of a disk to given value as true.
+// setDiskAutodelete sets the autodelete flag of a disk to given value.
 func setDiskAutoDelete(
 	w io.Writer,
-	projectID, zone, instanceName, diskName string,
+	projectID, zone, instanceName, diskName string, autoDelete bool,
 ) error {
 	// projectID := "your_project_id"
-	// zone := "europe-central2-b"
+	// zone := "us-west3-b"
 	// instanceName := "your_instance_name"
 	// diskName := "your_disk_name"
+	// autoDelete := true
 
 	ctx := context.Background()
 	instancesClient, err := compute.NewInstancesRESTClient(ctx)
 	if err != nil {
-		return fmt.Errorf("NewInstancesRESTClient: %v", err)
+		return fmt.Errorf("NewInstancesRESTClient: %w", err)
 	}
 	defer instancesClient.Close()
 
@@ -49,7 +50,7 @@ func setDiskAutoDelete(
 
 	instance, err := instancesClient.Get(ctx, getInstanceReq)
 	if err != nil {
-		return fmt.Errorf("unable to get instance: %v", err)
+		return fmt.Errorf("unable to get instance: %w", err)
 	}
 
 	diskExists := false
@@ -74,16 +75,16 @@ func setDiskAutoDelete(
 		Zone:       zone,
 		Instance:   instanceName,
 		DeviceName: diskName,
-		AutoDelete: true,
+		AutoDelete: autoDelete,
 	}
 
 	op, err := instancesClient.SetDiskAutoDelete(ctx, req)
 	if err != nil {
-		return fmt.Errorf("unable to set disk autodelete field: %v", err)
+		return fmt.Errorf("unable to set disk autodelete field: %w", err)
 	}
 
 	if err = op.Wait(ctx); err != nil {
-		return fmt.Errorf("unable to wait for the operation: %v", err)
+		return fmt.Errorf("unable to wait for the operation: %w", err)
 	}
 
 	fmt.Fprintf(w, "disk autoDelete field updated.\n")

@@ -22,9 +22,9 @@ import (
 	"time"
 
 	securitycenter "cloud.google.com/go/securitycenter/apiv1"
+	"cloud.google.com/go/securitycenter/apiv1/securitycenterpb"
 	"github.com/golang/protobuf/ptypes"
 	"google.golang.org/api/iterator"
-	securitycenterpb "google.golang.org/genproto/googleapis/cloud/securitycenter/v1"
 )
 
 // listAllProjectAssetsAndStateChange lists all current GCP project assets in
@@ -36,11 +36,15 @@ func listAllProjectAssetsAndStateChanges(w io.Writer, orgID string) error {
 	ctx := context.Background()
 	client, err := securitycenter.NewClient(ctx)
 	if err != nil {
-		return fmt.Errorf("securitycenter.NewClient: %v", err)
+		return fmt.Errorf("securitycenter.NewClient: %w", err)
 	}
 	defer client.Close() // Closing the client safely cleans up background resources.
 
 	req := &securitycenterpb.ListAssetsRequest{
+		// Parent must be in one of the following formats:
+		//		"organizations/{orgId}"
+		//		"projects/{projectId}"
+		//		"folders/{folderId}"
 		Parent:          fmt.Sprintf("organizations/%s", orgID),
 		Filter:          `security_center_properties.resource_type="google.cloud.resourcemanager.Project"`,
 		CompareDuration: ptypes.DurationProto(24 * time.Hour),
@@ -54,7 +58,7 @@ func listAllProjectAssetsAndStateChanges(w io.Writer, orgID string) error {
 			break
 		}
 		if err != nil {
-			return fmt.Errorf("ListAssets: %v", err)
+			return fmt.Errorf("ListAssets: %w", err)
 		}
 		asset := result.Asset
 		properties := asset.SecurityCenterProperties

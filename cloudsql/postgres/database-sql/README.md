@@ -109,11 +109,11 @@ To test the application locally, follow these steps after the proxy is running:
 To run the sample on GAE-Standard, create an App Engine project by following the setup for these
 [instructions](https://cloud.google.com/appengine/docs/standard/go/quickstart#before-you-begin).
 
-First, update `app.standard.yaml` with the correct values to pass the environment
+First, update [`app.standard.yaml`](cmd/app/app.standard.yaml) with the correct values to pass the environment
 variables into the runtime. Your `app.standard.yaml` file should look like this:
 
 ```yaml
-runtime: go113
+runtime: go116
 env_variables:
   INSTANCE_UNIX_SOCKET: /cloudsql/<PROJECT-ID>:<INSTANCE-REGION>:<INSTANCE-NAME>
   DB_USER: <YOUR_DB_USER_NAME>
@@ -127,7 +127,7 @@ secure solution such as [Cloud Secret Manager](https://cloud.google.com/secret-m
 Next, the following command will deploy the application to your Google Cloud project:
 
 ```bash
-gcloud app deploy app.standard.yaml
+gcloud app deploy cmd/app/app.standard.yaml
 ```
 
 ## Deploying to App Engine Flexible
@@ -135,7 +135,7 @@ gcloud app deploy app.standard.yaml
 To run the sample on GAE-Flex, create an App Engine project by following the setup for these
 [instructions](https://cloud.google.com/appengine/docs/standard/go/quickstart#before-you-begin).
 
-First, update `app.flexible.yaml` with the correct values to pass the environment
+First, update [`app.flexible.yaml`](app.flexible.yaml) with the correct values to pass the environment
 variables into the runtime. Your `app.flexible.yaml` file should look like this:
 
 ```yaml
@@ -211,3 +211,33 @@ gcloud beta run deploy SERVICE --image gcr.io/[YOUR_PROJECT_ID]/run-sql \
 3. Navigate your browser to the URL noted in step 2.
 
 For more details about using Cloud Run see http://cloud.run.
+
+## Deploy to Cloud Functions
+
+To deploy the service to [Cloud Functions](https://cloud.google.com/functions/docs) run the following command:
+
+```sh
+gcloud functions deploy votes --gen2 --runtime go120 --trigger-http \
+  --allow-unauthenticated \
+  --entry-point Votes \
+  --region <INSTANCE_REGION> \
+  --set-env-vars INSTANCE_UNIX_SOCKET=/cloudsql/<PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME> \
+  --set-env-vars DB_USER=$DB_USER \
+  --set-env-vars DB_PASS=$DB_PASS \
+  --set-env-vars DB_NAME=$DB_NAME
+```
+
+Note: If the function fails to deploy or returns a `500: Internal service error`,
+this may be due to a known limitation with Cloud Functions gen2 not being able
+to configure the underlying Cloud Run service with a Cloud SQL connection.
+
+A workaround command to fix this is is to manually revise the Cloud Run
+service with the Cloud SQL Connection:
+
+```sh
+gcloud run deploy votes --source . \
+  --region <INSTANCE_REGION> \
+  --add-cloudsql-instances <PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME>
+```
+
+The Cloud Function command above can now be re-run with a successful deployment.

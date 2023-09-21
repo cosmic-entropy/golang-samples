@@ -14,7 +14,7 @@
 
 package videostitcher
 
-// [START video_stitcher_list_cdn_keys]
+// [START videostitcher_list_cdn_keys]
 import (
 	"context"
 	"fmt"
@@ -23,17 +23,17 @@ import (
 	"google.golang.org/api/iterator"
 
 	stitcher "cloud.google.com/go/video/stitcher/apiv1"
-	stitcherpb "google.golang.org/genproto/googleapis/cloud/video/stitcher/v1"
+	"cloud.google.com/go/video/stitcher/apiv1/stitcherpb"
 )
 
-// listCdnKeys gets all of the CDN keys for a given location.
-func listCdnKeys(w io.Writer, projectID string) error {
+// listCDNKeys gets all of the CDN keys for a given location.
+func listCDNKeys(w io.Writer, projectID string) error {
 	// projectID := "my-project-id"
 	location := "us-central1"
 	ctx := context.Background()
 	client, err := stitcher.NewVideoStitcherClient(ctx)
 	if err != nil {
-		return fmt.Errorf("stitcher.NewVideoStitcherClient: %v", err)
+		return fmt.Errorf("stitcher.NewVideoStitcherClient: %w", err)
 	}
 	defer client.Close()
 
@@ -49,7 +49,7 @@ func listCdnKeys(w io.Writer, projectID string) error {
 			break
 		}
 		if err != nil {
-			return fmt.Errorf("it.Next(): %v", err)
+			return fmt.Errorf("it.Next(): %w", err)
 		}
 		fmt.Fprintln(w, response.GetName())
 	}
@@ -57,4 +57,4 @@ func listCdnKeys(w io.Writer, projectID string) error {
 	return nil
 }
 
-// [END video_stitcher_list_cdn_keys]
+// [END videostitcher_list_cdn_keys]

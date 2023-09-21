@@ -21,7 +21,7 @@ import (
 	"io"
 
 	livestream "cloud.google.com/go/video/livestream/apiv1"
-	livestreampb "google.golang.org/genproto/googleapis/cloud/video/livestream/v1"
+	"cloud.google.com/go/video/livestream/apiv1/livestreampb"
 )
 
 // deleteInput deletes a previously-created input endpoint.
@@ -32,7 +32,7 @@ func deleteInput(w io.Writer, projectID, location, inputID string) error {
 	ctx := context.Background()
 	client, err := livestream.NewClient(ctx)
 	if err != nil {
-		return fmt.Errorf("NewClient: %v", err)
+		return fmt.Errorf("NewClient: %w", err)
 	}
 	defer client.Close()
 
@@ -42,11 +42,11 @@ func deleteInput(w io.Writer, projectID, location, inputID string) error {
 
 	op, err := client.DeleteInput(ctx, req)
 	if err != nil {
-		return fmt.Errorf("DeleteInput: %v", err)
+		return fmt.Errorf("DeleteInput: %w", err)
 	}
 	err = op.Wait(ctx)
 	if err != nil {
-		return fmt.Errorf("Wait: %v", err)
+		return fmt.Errorf("Wait: %w", err)
 	}
 
 	fmt.Fprintf(w, "Deleted input")

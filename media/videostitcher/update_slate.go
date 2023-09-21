@@ -14,14 +14,14 @@
 
 package videostitcher
 
-// [START video_stitcher_update_slate]
+// [START videostitcher_update_slate]
 import (
 	"context"
 	"fmt"
 	"io"
 
 	stitcher "cloud.google.com/go/video/stitcher/apiv1"
-	stitcherstreampb "google.golang.org/genproto/googleapis/cloud/video/stitcher/v1"
+	stitcherstreampb "cloud.google.com/go/video/stitcher/apiv1/stitcherpb"
 	"google.golang.org/protobuf/types/known/fieldmaskpb"
 )
 
@@ -35,7 +35,7 @@ func updateSlate(w io.Writer, projectID, slateID, slateURI string) error {
 	ctx := context.Background()
 	client, err := stitcher.NewVideoStitcherClient(ctx)
 	if err != nil {
-		return fmt.Errorf("stitcher.NewVideoStitcherClient: %v", err)
+		return fmt.Errorf("stitcher.NewVideoStitcherClient: %w", err)
 	}
 	defer client.Close()
 
@@ -53,11 +53,11 @@ func updateSlate(w io.Writer, projectID, slateID, slateURI string) error {
 	// Updates the slate.
 	response, err := client.UpdateSlate(ctx, req)
 	if err != nil {
-		return fmt.Errorf("client.UpdateSlate: %v", err)
+		return fmt.Errorf("client.UpdateSlate: %w", err)
 	}
 
 	fmt.Fprintf(w, "Updated slate: %+v", response)
 	return nil
 }
 
-// [END video_stitcher_update_slate]
+// [END videostitcher_update_slate]

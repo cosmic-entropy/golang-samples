@@ -21,8 +21,8 @@ import (
 	"io"
 
 	secretmanager "cloud.google.com/go/secretmanager/apiv1"
+	"cloud.google.com/go/secretmanager/apiv1/secretmanagerpb"
 	"google.golang.org/api/iterator"
-	secretmanagerpb "google.golang.org/genproto/googleapis/cloud/secretmanager/v1"
 )
 
 // listSecrets lists all secrets in the given project.
@@ -33,7 +33,7 @@ func listSecrets(w io.Writer, parent string) error {
 	ctx := context.Background()
 	client, err := secretmanager.NewClient(ctx)
 	if err != nil {
-		return fmt.Errorf("failed to create secretmanager client: %v", err)
+		return fmt.Errorf("failed to create secretmanager client: %w", err)
 	}
 	defer client.Close()
 
@@ -51,7 +51,7 @@ func listSecrets(w io.Writer, parent string) error {
 		}
 
 		if err != nil {
-			return fmt.Errorf("failed to list secrets: %v", err)
+			return fmt.Errorf("failed to list secrets: %w", err)
 		}
 
 		fmt.Fprintf(w, "Found secret %s\n", resp.Name)

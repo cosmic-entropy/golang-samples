@@ -21,7 +21,7 @@ import (
 	"io"
 
 	livestream "cloud.google.com/go/video/livestream/apiv1"
-	livestreampb "google.golang.org/genproto/googleapis/cloud/video/livestream/v1"
+	"cloud.google.com/go/video/livestream/apiv1/livestreampb"
 	"google.golang.org/protobuf/types/known/fieldmaskpb"
 )
 
@@ -34,7 +34,7 @@ func updateChannel(w io.Writer, projectID, location, channelID, inputID string) 
 	ctx := context.Background()
 	client, err := livestream.NewClient(ctx)
 	if err != nil {
-		return fmt.Errorf("NewClient: %v", err)
+		return fmt.Errorf("NewClient: %w", err)
 	}
 	defer client.Close()
 
@@ -57,11 +57,11 @@ func updateChannel(w io.Writer, projectID, location, channelID, inputID string) 
 	// Updates the input.
 	op, err := client.UpdateChannel(ctx, req)
 	if err != nil {
-		return fmt.Errorf("UpdateChannel: %v", err)
+		return fmt.Errorf("UpdateChannel: %w", err)
 	}
 	response, err := op.Wait(ctx)
 	if err != nil {
-		return fmt.Errorf("Wait: %v", err)
+		return fmt.Errorf("Wait: %w", err)
 	}
 
 	fmt.Fprintf(w, "Updated channel: %v", response.Name)

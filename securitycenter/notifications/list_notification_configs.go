@@ -21,8 +21,8 @@ import (
 	"io"
 
 	securitycenter "cloud.google.com/go/securitycenter/apiv1"
+	"cloud.google.com/go/securitycenter/apiv1/securitycenterpb"
 	"google.golang.org/api/iterator"
-	securitycenterpb "google.golang.org/genproto/googleapis/cloud/securitycenter/v1"
 )
 
 func listNotificationConfigs(w io.Writer, orgID string) error {
@@ -32,11 +32,15 @@ func listNotificationConfigs(w io.Writer, orgID string) error {
 	client, err := securitycenter.NewClient(ctx)
 
 	if err != nil {
-		return fmt.Errorf("securitycenter.NewClient: %v", err)
+		return fmt.Errorf("securitycenter.NewClient: %w", err)
 	}
 	defer client.Close()
 
 	req := &securitycenterpb.ListNotificationConfigsRequest{
+		// Parent must be in one of the following formats:
+		//		"organizations/{orgId}"
+		//		"projects/{projectId}"
+		//		"folders/{folderId}"
 		Parent: fmt.Sprintf("organizations/%s", orgID),
 	}
 	it := client.ListNotificationConfigs(ctx, req)
@@ -47,7 +51,7 @@ func listNotificationConfigs(w io.Writer, orgID string) error {
 		}
 
 		if err != nil {
-			return fmt.Errorf("it.Next: %v", err)
+			return fmt.Errorf("it.Next: %w", err)
 		}
 
 		fmt.Fprintln(w, "NotificationConfig: ", result)

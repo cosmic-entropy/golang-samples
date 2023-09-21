@@ -64,6 +64,7 @@ var allowList = []string{
 	"**/testdata/**/*.txt",
 	"**/testdata/**/*.csv",
 	"**/testdata/**/*.mp4",
+	"**/testdata/*.jsonl",
 
 	// Healthcare data.
 	"healthcare/testdata/dicom_00000001_000.dcm",
@@ -73,6 +74,9 @@ var allowList = []string{
 	"webrisk/non_existing_path.path",
 	"webrisk/internal/webrisk_proto/*.proto",
 	"webrisk/testdata/hashes.gob",
+
+	// DLP data
+	"dlp/snippets/**/testdata/*",
 
 	// Endpoints samples.
 	"endpoints/**/*.proto",
@@ -97,6 +101,7 @@ var allowList = []string{
 
 	// TODO: cruft that should probably be under "testdata".
 	"appengine_flexible/pubsub/sample_message.json",
+	"appengine_flexible/go115_and_earlier/pubsub/sample_message.json",
 	"dialogflow/resources/**/*",
 	"texttospeech/**/*",
 	"storage/objects/notes.txt",
@@ -117,6 +122,15 @@ var allowList = []string{
 
 	// dataflow flex template metadata files
 	"dataflow/flex-templates/**/metadata.json",
+
+	// document ai sample pdfs
+	"documentai/**/*.pdf",
+
+	// Speech-to-Text audio/video files
+	"speech/resources/commercial_mono.wav",
+
+	// deprecated tests (introduced for IoT samples)
+	"**/*_test.go.deprecated",
 }
 
 // Check whether accidental binary files have been checked in.

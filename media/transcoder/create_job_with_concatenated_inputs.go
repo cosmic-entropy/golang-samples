@@ -22,7 +22,7 @@ import (
 	"time"
 
 	transcoder "cloud.google.com/go/video/transcoder/apiv1"
-	transcoderpb "google.golang.org/genproto/googleapis/cloud/video/transcoder/v1"
+	"cloud.google.com/go/video/transcoder/apiv1/transcoderpb"
 	"google.golang.org/protobuf/types/known/durationpb"
 )
 
@@ -46,7 +46,7 @@ func createJobWithConcatenatedInputs(w io.Writer, projectID string, location str
 	ctx := context.Background()
 	client, err := transcoder.NewClient(ctx)
 	if err != nil {
-		return fmt.Errorf("NewClient: %v", err)
+		return fmt.Errorf("NewClient: %w", err)
 	}
 	defer client.Close()
 
@@ -121,7 +121,7 @@ func createJobWithConcatenatedInputs(w io.Writer, projectID string, location str
 	// You can query for the job state; see getJob() in get_job.go.
 	response, err := client.CreateJob(ctx, req)
 	if err != nil {
-		return fmt.Errorf("CreateJob: %v", err)
+		return fmt.Errorf("CreateJob: %w", err)
 	}
 
 	fmt.Fprintf(w, "Job: %v", response.GetName())

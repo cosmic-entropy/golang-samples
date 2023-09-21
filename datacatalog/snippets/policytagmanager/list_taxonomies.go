@@ -21,8 +21,8 @@ import (
 	"io"
 
 	datacatalog "cloud.google.com/go/datacatalog/apiv1beta1"
+	"cloud.google.com/go/datacatalog/apiv1beta1/datacatalogpb"
 	"google.golang.org/api/iterator"
-	datacatalogpb "google.golang.org/genproto/googleapis/cloud/datacatalog/v1beta1"
 )
 
 // listTaxonomies prints information about the taxonomies contained within a specific
@@ -33,7 +33,7 @@ func listTaxonomies(w io.Writer, projectID, location string) error {
 	ctx := context.Background()
 	policyClient, err := datacatalog.NewPolicyTagManagerClient(ctx)
 	if err != nil {
-		return fmt.Errorf("datacatalog.NewPolicyTagManagerClient: %v", err)
+		return fmt.Errorf("datacatalog.NewPolicyTagManagerClient: %w", err)
 	}
 	defer policyClient.Close()
 
@@ -48,7 +48,7 @@ func listTaxonomies(w io.Writer, projectID, location string) error {
 			break
 		}
 		if err != nil {
-			return fmt.Errorf("ListTaxonomies iteration error: %v", err)
+			return fmt.Errorf("ListTaxonomies iteration error: %w", err)
 		}
 
 		fmt.Fprintf(w, "\t- %s: %s\n", resp.Name, resp.DisplayName)

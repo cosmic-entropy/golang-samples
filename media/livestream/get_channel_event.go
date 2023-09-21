@@ -21,7 +21,7 @@ import (
 	"io"
 
 	livestream "cloud.google.com/go/video/livestream/apiv1"
-	livestreampb "google.golang.org/genproto/googleapis/cloud/video/livestream/v1"
+	"cloud.google.com/go/video/livestream/apiv1/livestreampb"
 )
 
 // getChannelEvent gets a previously-created channel event.
@@ -33,7 +33,7 @@ func getChannelEvent(w io.Writer, projectID, location, channelID, eventID string
 	ctx := context.Background()
 	client, err := livestream.NewClient(ctx)
 	if err != nil {
-		return fmt.Errorf("NewClient: %v", err)
+		return fmt.Errorf("NewClient: %w", err)
 	}
 	defer client.Close()
 
@@ -43,7 +43,7 @@ func getChannelEvent(w io.Writer, projectID, location, channelID, eventID string
 
 	response, err := client.GetEvent(ctx, req)
 	if err != nil {
-		return fmt.Errorf("GetEvent: %v", err)
+		return fmt.Errorf("GetEvent: %w", err)
 	}
 
 	fmt.Fprintf(w, "Channel event: %v", response.Name)

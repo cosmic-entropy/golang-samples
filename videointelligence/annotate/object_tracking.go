@@ -24,8 +24,8 @@ import (
 	"io/ioutil"
 
 	video "cloud.google.com/go/videointelligence/apiv1"
+	videopb "cloud.google.com/go/videointelligence/apiv1/videointelligencepb"
 	"github.com/golang/protobuf/ptypes"
-	videopb "google.golang.org/genproto/googleapis/cloud/videointelligence/v1"
 )
 
 // objectTracking analyzes a video and extracts entities with their bounding boxes.
@@ -37,7 +37,7 @@ func objectTracking(w io.Writer, filename string) error {
 	// Creates a client.
 	client, err := video.NewClient(ctx)
 	if err != nil {
-		return fmt.Errorf("video.NewClient: %v", err)
+		return fmt.Errorf("video.NewClient: %w", err)
 	}
 	defer client.Close()
 
@@ -53,12 +53,12 @@ func objectTracking(w io.Writer, filename string) error {
 		},
 	})
 	if err != nil {
-		return fmt.Errorf("AnnotateVideo: %v", err)
+		return fmt.Errorf("AnnotateVideo: %w", err)
 	}
 
 	resp, err := op.Wait(ctx)
 	if err != nil {
-		return fmt.Errorf("Wait: %v", err)
+		return fmt.Errorf("Wait: %w", err)
 	}
 
 	// Only one video was processed, so get the first result.

@@ -22,7 +22,7 @@ import (
 	"io"
 
 	secretmanager "cloud.google.com/go/secretmanager/apiv1"
-	secretmanagerpb "google.golang.org/genproto/googleapis/cloud/secretmanager/v1"
+	"cloud.google.com/go/secretmanager/apiv1/secretmanagerpb"
 )
 
 // addSecretVersion adds a new secret version to the given secret with the
@@ -41,7 +41,7 @@ func addSecretVersion(w io.Writer, parent string) error {
 	ctx := context.Background()
 	client, err := secretmanager.NewClient(ctx)
 	if err != nil {
-		return fmt.Errorf("failed to create secretmanager client: %v", err)
+		return fmt.Errorf("failed to create secretmanager client: %w", err)
 	}
 	defer client.Close()
 
@@ -57,7 +57,7 @@ func addSecretVersion(w io.Writer, parent string) error {
 	// Call the API.
 	result, err := client.AddSecretVersion(ctx, req)
 	if err != nil {
-		return fmt.Errorf("failed to add secret version: %v", err)
+		return fmt.Errorf("failed to add secret version: %w", err)
 	}
 	fmt.Fprintf(w, "Added secret version: %s\n", result.Name)
 	return nil

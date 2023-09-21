@@ -14,7 +14,7 @@
 
 package videostitcher
 
-// [START video_stitcher_get_cdn_key]
+// [START videostitcher_get_cdn_key]
 import (
 	"context"
 	"encoding/json"
@@ -22,23 +22,23 @@ import (
 	"io"
 
 	stitcher "cloud.google.com/go/video/stitcher/apiv1"
-	stitcherpb "google.golang.org/genproto/googleapis/cloud/video/stitcher/v1"
+	"cloud.google.com/go/video/stitcher/apiv1/stitcherpb"
 )
 
-// getCdnKey gets a CDN key by ID.
-func getCdnKey(w io.Writer, projectID, cdnKeyID string) error {
+// getCDNKey gets a CDN key by ID.
+func getCDNKey(w io.Writer, projectID, keyID string) error {
 	// projectID := "my-project-id"
-	// cdnKeyID := "my-cdn-key"
+	// keyID := "my-cdn-key"
 	location := "us-central1"
 	ctx := context.Background()
 	client, err := stitcher.NewVideoStitcherClient(ctx)
 	if err != nil {
-		return fmt.Errorf("stitcher.NewVideoStitcherClient: %v", err)
+		return fmt.Errorf("stitcher.NewVideoStitcherClient: %w", err)
 	}
 	defer client.Close()
 
 	req := &stitcherpb.GetCdnKeyRequest{
-		Name: fmt.Sprintf("projects/%s/locations/%s/cdnKeys/%s", projectID, location, cdnKeyID),
+		Name: fmt.Sprintf("projects/%s/locations/%s/cdnKeys/%s", projectID, location, keyID),
 	}
 	// Gets the CDN key.
 	response, err := client.GetCdnKey(ctx, req)
@@ -47,11 +47,11 @@ func getCdnKey(w io.Writer, projectID, cdnKeyID string) error {
 	}
 	b, err := json.MarshalIndent(response, "", " ")
 	if err != nil {
-		return fmt.Errorf("json.MarshalIndent: %v", err)
+		return fmt.Errorf("json.MarshalIndent: %w", err)
 	}
 
 	fmt.Fprintf(w, "CDN key:\n%s", string(b))
 	return nil
 }
 
-// [END video_stitcher_get_cdn_key]
+// [END videostitcher_get_cdn_key]

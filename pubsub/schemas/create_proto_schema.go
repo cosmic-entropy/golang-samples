@@ -19,7 +19,7 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"io/ioutil"
+	"os"
 
 	"cloud.google.com/go/pubsub"
 )
@@ -32,11 +32,11 @@ func createProtoSchema(w io.Writer, projectID, schemaID, protoFile string) error
 	ctx := context.Background()
 	client, err := pubsub.NewSchemaClient(ctx, projectID)
 	if err != nil {
-		return fmt.Errorf("pubsub.NewSchemaClient: %v", err)
+		return fmt.Errorf("pubsub.NewSchemaClient: %w", err)
 	}
 	defer client.Close()
 
-	protoSource, err := ioutil.ReadFile(protoFile)
+	protoSource, err := os.ReadFile(protoFile)
 	if err != nil {
 		return fmt.Errorf("error reading from file: %s", protoFile)
 	}
@@ -47,7 +47,7 @@ func createProtoSchema(w io.Writer, projectID, schemaID, protoFile string) error
 	}
 	s, err := client.CreateSchema(ctx, schemaID, config)
 	if err != nil {
-		return fmt.Errorf("CreateSchema: %v", err)
+		return fmt.Errorf("CreateSchema: %w", err)
 	}
 	fmt.Fprintf(w, "Schema created: %#v\n", s)
 	return nil

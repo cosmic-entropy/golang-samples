@@ -20,7 +20,7 @@ import (
 	"fmt"
 
 	datacatalog "cloud.google.com/go/datacatalog/apiv1beta1"
-	datacatalogpb "google.golang.org/genproto/googleapis/cloud/datacatalog/v1beta1"
+	"cloud.google.com/go/datacatalog/apiv1beta1/datacatalogpb"
 )
 
 // deleteTaxonomy removes an existing taxonomy resource.
@@ -29,7 +29,7 @@ func deleteTaxonomy(taxonomyID string) error {
 	ctx := context.Background()
 	policyClient, err := datacatalog.NewPolicyTagManagerClient(ctx)
 	if err != nil {
-		return fmt.Errorf("datacatalog.NewPolicyTagManagerClient: %v", err)
+		return fmt.Errorf("datacatalog.NewPolicyTagManagerClient: %w", err)
 	}
 	defer policyClient.Close()
 

@@ -43,7 +43,7 @@ SIGNIFICANT_CHANGES=$(git --no-pager diff --name-only main..HEAD | grep -Ev '(\.
 # CHANGED_DIRS is the list of significant top-level directories that changed,
 # but weren't deleted by the current PR.
 # CHANGED_DIRS will be empty when run on main.
-CHANGED_DIRS=$(echo "$SIGNIFICANT_CHANGES" | tr ' ' '\n' | grep "/" | cut -d/ -f1 | sort -u | tr '\n' ' ' | xargs ls -d 2>/dev/null || true)
+CHANGED_DIRS=$(echo "$SIGNIFICANT_CHANGES" | tr ' ' '\n' | grep "/" | cut -d/ -f1 | sort -u | tr '\n' ' ' | xargs --no-run-if-empty ls -d 2>/dev/null || true)
 
 # List all modules in changed directories.
 # If running on main will collect all modules in the repo, including the root module.
@@ -88,6 +88,9 @@ export GCLOUD_ORGANIZATION=1081635000895
 export SCC_PUBSUB_PROJECT="project-a-id"
 export SCC_PUBSUB_TOPIC="projects/project-a-id/topics/notifications-sample-topic"
 export SCC_PUBSUB_SUBSCRIPTION="notification-sample-subscription"
+# gcp-sec-demo-org.joonix.net
+export SCC_PROJECT_ORG_ID=688851828130
+export SCC_PROJECT_ID=sharp-quest
 
 export GOLANG_SAMPLES_SPANNER=projects/golang-samples-tests/instances/golang-samples-tests
 export GOLANG_SAMPLES_SPANNER_INSTANCE_CONFIG="regional-us-west1"
@@ -97,8 +100,6 @@ export GOLANG_SAMPLES_BIGTABLE_INSTANCE=testing-instance
 export GOLANG_SAMPLES_FIRESTORE_PROJECT=golang-samples-fire-0
 
 set -x
-
-source ${KOKORO_GFILE_DIR}/secret_manager/go-aws-secrets
 
 # Set application credentials before using gimmeproj so it has access.
 # This is changed to a project-specific credential after a project is leased.
@@ -133,6 +134,14 @@ export PATH="$PATH:/tmp/google-cloud-sdk/bin";
 if [[ $KOKORO_BUILD_ARTIFACTS_SUBDIR = *"system-tests"* ]] || [[ $CHANGED_DIRS =~ "run" ]]; then
   ./testing/kokoro/configure_gcloud.bash;
 fi
+
+export STS_AWS_SECRET=`gcloud secrets versions access latest --project cloud-devrel-kokoro-resources --secret=go-storagetransfer-aws`
+export AWS_ACCESS_KEY_ID=`S="$STS_AWS_SECRET" python3 -c 'import json,sys,os;obj=json.loads(os.getenv("S"));print (obj["AccessKeyId"]);'`
+export AWS_SECRET_ACCESS_KEY=`S="$STS_AWS_SECRET" python3 -c 'import json,sys,os;obj=json.loads(os.getenv("S"));print (obj["SecretAccessKey"]);'`
+export STS_AZURE_SECRET=`gcloud secrets versions access latest --project cloud-devrel-kokoro-resources --secret=go-storagetransfer-azure`
+export AZURE_STORAGE_ACCOUNT=`S="$STS_AZURE_SECRET" python3 -c 'import json,sys,os;obj=json.loads(os.getenv("S"));print (obj["StorageAccount"]);'`
+export AZURE_CONNECTION_STRING=`S="$STS_AZURE_SECRET" python3 -c 'import json,sys,os;obj=json.loads(os.getenv("S"));print (obj["ConnectionString"]);'`
+export AZURE_SAS_TOKEN=`S="$STS_AZURE_SECRET" python3 -c 'import json,sys,os;obj=json.loads(os.getenv("S"));print (obj["SAS"]);'`
 
 
 
@@ -184,8 +193,9 @@ runTests() {
   set +x
   echo "Running 'go test' in '$(pwd)'..."
   set -x
-  2>&1 go test -timeout $TIMEOUT -v "${1:-./...}" | tee sponge_log.xml
+  2>&1 go test -timeout $TIMEOUT -v "${1:-./...}" | tee sponge_log.log
   cat sponge_log.log | /go/bin/go-junit-report -set-exit-code > sponge_log.xml
+  exit_code=$((exit_code + $?))
   set +x
 }
 

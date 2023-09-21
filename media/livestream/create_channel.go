@@ -23,7 +23,7 @@ import (
 	"github.com/golang/protobuf/ptypes/duration"
 
 	livestream "cloud.google.com/go/video/livestream/apiv1"
-	livestreampb "google.golang.org/genproto/googleapis/cloud/video/livestream/v1"
+	"cloud.google.com/go/video/livestream/apiv1/livestreampb"
 )
 
 // createChannel creates a channel.
@@ -36,7 +36,7 @@ func createChannel(w io.Writer, projectID, location, channelID, inputID, outputU
 	ctx := context.Background()
 	client, err := livestream.NewClient(ctx)
 	if err != nil {
-		return fmt.Errorf("NewClient: %v", err)
+		return fmt.Errorf("NewClient: %w", err)
 	}
 	defer client.Close()
 
@@ -114,11 +114,11 @@ func createChannel(w io.Writer, projectID, location, channelID, inputID, outputU
 	// Creates the channel.
 	op, err := client.CreateChannel(ctx, req)
 	if err != nil {
-		return fmt.Errorf("CreateChannel: %v", err)
+		return fmt.Errorf("CreateChannel: %w", err)
 	}
 	response, err := op.Wait(ctx)
 	if err != nil {
-		return fmt.Errorf("Wait: %v", err)
+		return fmt.Errorf("Wait: %w", err)
 	}
 
 	fmt.Fprintf(w, "Channel: %v", response.Name)

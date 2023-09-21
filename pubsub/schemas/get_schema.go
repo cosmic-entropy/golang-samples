@@ -29,16 +29,16 @@ func getSchema(w io.Writer, projectID, schemaID string) error {
 	ctx := context.Background()
 	client, err := pubsub.NewSchemaClient(ctx, projectID)
 	if err != nil {
-		return fmt.Errorf("pubsub.NewSchemaClient: %v", err)
+		return fmt.Errorf("pubsub.NewSchemaClient: %w", err)
 	}
 	defer client.Close()
 
-	// Retrieve the full schema view. If you don't want to retrive the
+	// Retrieve the full schema view. If you don't want to retrieve the
 	// definition, pass in pubsub.SchemaViewBasic which retrieves
 	// just the name and type of the schema.
 	s, err := client.Schema(ctx, schemaID, pubsub.SchemaViewFull)
 	if err != nil {
-		return fmt.Errorf("client.Schema: %v", err)
+		return fmt.Errorf("client.Schema: %w", err)
 	}
 	fmt.Fprintf(w, "Got schema: %#v\n", s)
 	return nil

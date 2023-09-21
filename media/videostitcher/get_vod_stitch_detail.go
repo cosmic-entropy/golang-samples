@@ -14,7 +14,7 @@
 
 package videostitcher
 
-// [START video_stitcher_get_vod_stitch_detail]
+// [START videostitcher_get_vod_stitch_detail]
 import (
 	"context"
 	"encoding/json"
@@ -22,7 +22,7 @@ import (
 	"io"
 
 	stitcher "cloud.google.com/go/video/stitcher/apiv1"
-	stitcherpb "google.golang.org/genproto/googleapis/cloud/video/stitcher/v1"
+	"cloud.google.com/go/video/stitcher/apiv1/stitcherpb"
 )
 
 // getVodStitchDetail gets the specified stitch detail for a video on demand (VOD) session.
@@ -34,7 +34,7 @@ func getVodStitchDetail(w io.Writer, projectID, sessionID, stitchDetailID string
 	ctx := context.Background()
 	client, err := stitcher.NewVideoStitcherClient(ctx)
 	if err != nil {
-		return fmt.Errorf("stitcher.NewVideoStitcherClient: %v", err)
+		return fmt.Errorf("stitcher.NewVideoStitcherClient: %w", err)
 	}
 	defer client.Close()
 
@@ -44,15 +44,15 @@ func getVodStitchDetail(w io.Writer, projectID, sessionID, stitchDetailID string
 	// Gets the stitch detail.
 	response, err := client.GetVodStitchDetail(ctx, req)
 	if err != nil {
-		return fmt.Errorf("client.GetStitchDetail: %v", err)
+		return fmt.Errorf("client.GetStitchDetail: %w", err)
 	}
 	b, err := json.MarshalIndent(response, "", " ")
 	if err != nil {
-		return fmt.Errorf("json.MarshalIndent: %v", err)
+		return fmt.Errorf("json.MarshalIndent: %w", err)
 	}
 
 	fmt.Fprintf(w, "VOD stitch detail:\n%s", string(b))
 	return nil
 }
 
-// [END video_stitcher_get_vod_stitch_detail]
+// [END videostitcher_get_vod_stitch_detail]

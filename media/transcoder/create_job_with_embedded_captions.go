@@ -21,10 +21,10 @@ import (
 	"io"
 
 	transcoder "cloud.google.com/go/video/transcoder/apiv1"
-	transcoderpb "google.golang.org/genproto/googleapis/cloud/video/transcoder/v1"
+	"cloud.google.com/go/video/transcoder/apiv1/transcoderpb"
 )
 
-// createJobWithEmbeddedCaptions creates a job that embeds captions in the
+// createJobWithEmbeddedCaptions creates a job that embeds closed captions in the
 // output video. See https://cloud.google.com/transcoder/docs/how-to/captions-and-subtitles
 // for more information.
 func createJobWithEmbeddedCaptions(w io.Writer, projectID string, location string, inputVideoURI string, inputCaptionsURI string, outputURI string) error {
@@ -37,9 +37,55 @@ func createJobWithEmbeddedCaptions(w io.Writer, projectID string, location strin
 	ctx := context.Background()
 	client, err := transcoder.NewClient(ctx)
 	if err != nil {
-		return fmt.Errorf("NewClient: %v", err)
+		return fmt.Errorf("NewClient: %w", err)
 	}
 	defer client.Close()
+
+	// Set up elementary streams. The InputKey field refers to inputs in
+	// the Inputs array defined the job config.
+	elementaryStreams := []*transcoderpb.ElementaryStream{
+		{
+			Key: "video_stream0",
+			ElementaryStream: &transcoderpb.ElementaryStream_VideoStream{
+				VideoStream: &transcoderpb.VideoStream{
+					CodecSettings: &transcoderpb.VideoStream_H264{
+						H264: &transcoderpb.VideoStream_H264CodecSettings{
+							BitrateBps:   550000,
+							FrameRate:    60,
+							HeightPixels: 360,
+							WidthPixels:  640,
+						},
+					},
+				},
+			},
+		},
+		{
+			Key: "audio_stream0",
+			ElementaryStream: &transcoderpb.ElementaryStream_AudioStream{
+				AudioStream: &transcoderpb.AudioStream{
+					Codec:      "aac",
+					BitrateBps: 64000,
+				},
+			},
+		},
+		{
+			Key: "cea_stream0",
+			ElementaryStream: &transcoderpb.ElementaryStream_TextStream{
+				TextStream: &transcoderpb.TextStream{
+					Codec: "cea608",
+					Mapping: []*transcoderpb.TextStream_TextMapping{
+						{
+							AtomKey:    "atom0",
+							InputKey:   "caption_input0",
+							InputTrack: 0,
+						},
+					},
+					LanguageCode: "en-US",
+					DisplayName:  "English",
+				},
+			},
+		},
+	}
 
 	req := &transcoderpb.CreateJobRequest{
 		Parent: fmt.Sprintf("projects/%s/locations/%s", projectID, location),
@@ -63,53 +109,8 @@ func createJobWithEmbeddedCaptions(w io.Writer, projectID string, location strin
 							Inputs: []string{"input0", "caption_input0"},
 						},
 					},
-					ElementaryStreams: []*transcoderpb.ElementaryStream{
-						{
-							Key: "video_stream0",
-							ElementaryStream: &transcoderpb.ElementaryStream_VideoStream{
-								VideoStream: &transcoderpb.VideoStream{
-									CodecSettings: &transcoderpb.VideoStream_H264{
-										H264: &transcoderpb.VideoStream_H264CodecSettings{
-											BitrateBps:   550000,
-											FrameRate:    60,
-											HeightPixels: 360,
-											WidthPixels:  640,
-										},
-									},
-								},
-							},
-						},
-						{
-							Key: "audio_stream0",
-							ElementaryStream: &transcoderpb.ElementaryStream_AudioStream{
-								AudioStream: &transcoderpb.AudioStream{
-									Codec:      "aac",
-									BitrateBps: 64000,
-								},
-							},
-						},
-						{
-							Key: "cea-stream0",
-							ElementaryStream: &transcoderpb.ElementaryStream_TextStream{
-								TextStream: &transcoderpb.TextStream{
-									Codec: "cea608",
-									Mapping: []*transcoderpb.TextStream_TextMapping{
-										{
-											AtomKey:    "atom0",
-											InputKey:   "caption_input0",
-											InputTrack: 0,
-										},
-									},
-								},
-							},
-						},
-					},
+					ElementaryStreams: elementaryStreams,
 					MuxStreams: []*transcoderpb.MuxStream{
-						{
-							Key:               "sd",
-							Container:         "mp4",
-							ElementaryStreams: []string{"video_stream0", "audio_stream0"},
-						},
 						{
 							Key:               "sd-hls",
 							Container:         "ts",
@@ -146,7 +147,7 @@ func createJobWithEmbeddedCaptions(w io.Writer, projectID string, location strin
 	// You can query for the job state; see getJob() in get_job.go.
 	response, err := client.CreateJob(ctx, req)
 	if err != nil {
-		return fmt.Errorf("CreateJob: %v", err)
+		return fmt.Errorf("CreateJob: %w", err)
 	}
 
 	fmt.Fprintf(w, "Job: %v", response.GetName())

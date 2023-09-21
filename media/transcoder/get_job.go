@@ -21,7 +21,7 @@ import (
 	"io"
 
 	transcoder "cloud.google.com/go/video/transcoder/apiv1"
-	transcoderpb "google.golang.org/genproto/googleapis/cloud/video/transcoder/v1"
+	"cloud.google.com/go/video/transcoder/apiv1/transcoderpb"
 )
 
 // getJob gets a previously-created job. See https://cloud.google.com/transcoder/docs/how-to/jobs#check_job_status
@@ -33,7 +33,7 @@ func getJob(w io.Writer, projectID string, location string, jobID string) error 
 	ctx := context.Background()
 	client, err := transcoder.NewClient(ctx)
 	if err != nil {
-		return fmt.Errorf("NewClient: %v", err)
+		return fmt.Errorf("NewClient: %w", err)
 	}
 	defer client.Close()
 
@@ -43,7 +43,7 @@ func getJob(w io.Writer, projectID string, location string, jobID string) error 
 
 	response, err := client.GetJob(ctx, req)
 	if err != nil {
-		return fmt.Errorf("GetJob: %v", err)
+		return fmt.Errorf("GetJob: %w", err)
 	}
 
 	fmt.Fprintf(w, "Job: %v", response)

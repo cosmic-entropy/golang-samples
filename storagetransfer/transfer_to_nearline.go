@@ -26,7 +26,7 @@ import (
 	"google.golang.org/protobuf/types/known/durationpb"
 
 	storagetransfer "cloud.google.com/go/storagetransfer/apiv1"
-	storagetransferpb "google.golang.org/genproto/googleapis/storagetransfer/v1"
+	"cloud.google.com/go/storagetransfer/apiv1/storagetransferpb"
 )
 
 func transferToNearline(w io.Writer, projectID string, gcsSourceBucket string, gcsNearlineSinkBucket string) (*storagetransferpb.TransferJob, error) {
@@ -42,7 +42,7 @@ func transferToNearline(w io.Writer, projectID string, gcsSourceBucket string, g
 	ctx := context.Background()
 	client, err := storagetransfer.NewClient(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("storagetransfer.NewClient: %v", err)
+		return nil, fmt.Errorf("storagetransfer.NewClient: %w", err)
 	}
 	defer client.Close()
 
@@ -50,7 +50,7 @@ func transferToNearline(w io.Writer, projectID string, gcsSourceBucket string, g
 	jobDescription := "Transfers objects that haven't been modified in 30 days to a Nearline bucket"
 
 	// The time to start the transfer
-	startTime := time.Now()
+	startTime := time.Now().UTC()
 
 	req := &storagetransferpb.CreateTransferJobRequest{
 		TransferJob: &storagetransferpb.TransferJob{
@@ -89,13 +89,13 @@ func transferToNearline(w io.Writer, projectID string, gcsSourceBucket string, g
 	}
 	resp, err := client.CreateTransferJob(ctx, req)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create transfer job: %v", err)
+		return nil, fmt.Errorf("failed to create transfer job: %w", err)
 	}
 	if _, err = client.RunTransferJob(ctx, &storagetransferpb.RunTransferJobRequest{
 		ProjectId: projectID,
 		JobName:   resp.Name,
 	}); err != nil {
-		return nil, fmt.Errorf("failed to run transfer job: %v", err)
+		return nil, fmt.Errorf("failed to run transfer job: %w", err)
 	}
 	fmt.Fprintf(w, "Created and ran transfer job from %v to %v with name %v", gcsSourceBucket, gcsNearlineSinkBucket, resp.Name)
 	return resp, nil

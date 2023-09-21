@@ -22,9 +22,9 @@ import (
 	"os"
 
 	// Note: If connecting using the App Engine Flex Go runtime, use
-	// "github.com/jackc/pgx/stdlib" instead, since v4 requires
+	// "github.com/jackc/pgx/stdlib" instead, since v5 requires
 	// Go modules which are not supported by App Engine Flex.
-	_ "github.com/jackc/pgx/v4/stdlib"
+	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
 // connectUnixSocket initializes a Unix socket connection pool for
@@ -33,7 +33,7 @@ func connectUnixSocket() (*sql.DB, error) {
 	mustGetenv := func(k string) string {
 		v := os.Getenv(k)
 		if v == "" {
-			log.Fatalf("Warning: %s environment variable not set.\n", k)
+			log.Fatalf("Fatal Error in connect_unix.go: %s environment variable not set.\n", k)
 		}
 		return v
 	}
@@ -54,7 +54,7 @@ func connectUnixSocket() (*sql.DB, error) {
 	// dbPool is the pool of database connections.
 	dbPool, err := sql.Open("pgx", dbURI)
 	if err != nil {
-		return nil, fmt.Errorf("sql.Open: %v", err)
+		return nil, fmt.Errorf("sql.Open: %w", err)
 	}
 
 	// [START_EXCLUDE]

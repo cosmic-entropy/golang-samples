@@ -20,7 +20,7 @@ import (
 	"fmt"
 
 	secretmanager "cloud.google.com/go/secretmanager/apiv1"
-	secretmanagerpb "google.golang.org/genproto/googleapis/cloud/secretmanager/v1"
+	"cloud.google.com/go/secretmanager/apiv1/secretmanagerpb"
 )
 
 // disableSecretVersionWithEtag disables the given secret version. Future requests will
@@ -34,7 +34,7 @@ func disableSecretVersionWithEtag(name, etag string) error {
 	ctx := context.Background()
 	client, err := secretmanager.NewClient(ctx)
 	if err != nil {
-		return fmt.Errorf("failed to create secretmanager client: %v", err)
+		return fmt.Errorf("failed to create secretmanager client: %w", err)
 	}
 	defer client.Close()
 
@@ -46,7 +46,7 @@ func disableSecretVersionWithEtag(name, etag string) error {
 
 	// Call the API.
 	if _, err := client.DisableSecretVersion(ctx, req); err != nil {
-		return fmt.Errorf("failed to disable secret version: %v", err)
+		return fmt.Errorf("failed to disable secret version: %w", err)
 	}
 	return nil
 }

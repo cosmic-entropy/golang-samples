@@ -20,7 +20,7 @@ import (
 	"io"
 
 	secretmanager "cloud.google.com/go/secretmanager/apiv1"
-	secretmanagerpb "google.golang.org/genproto/googleapis/cloud/secretmanager/v1"
+	"cloud.google.com/go/secretmanager/apiv1/secretmanagerpb"
 )
 
 // createUserManagedReplicationSecret creates a new secret with the given name with user managed replication.
@@ -35,7 +35,7 @@ func createUserManagedReplicationSecret(w io.Writer, parent, id string, location
 	ctx := context.Background()
 	client, err := secretmanager.NewClient(ctx)
 	if err != nil {
-		return fmt.Errorf("failed to create secretmanager client: %v", err)
+		return fmt.Errorf("failed to create secretmanager client: %w", err)
 	}
 	defer client.Close()
 
@@ -62,7 +62,7 @@ func createUserManagedReplicationSecret(w io.Writer, parent, id string, location
 	// Call the API.
 	result, err := client.CreateSecret(ctx, req)
 	if err != nil {
-		return fmt.Errorf("failed to create secret with user managed replication: %v", err)
+		return fmt.Errorf("failed to create secret with user managed replication: %w", err)
 	}
 	fmt.Fprintf(w, "Created secret with user managed replication: %s\n", result.Name)
 	return nil

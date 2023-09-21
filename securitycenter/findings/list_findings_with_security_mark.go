@@ -21,20 +21,25 @@ import (
 	"io"
 
 	securitycenter "cloud.google.com/go/securitycenter/apiv1"
+	"cloud.google.com/go/securitycenter/apiv1/securitycenterpb"
 	"google.golang.org/api/iterator"
-	securitycenterpb "google.golang.org/genproto/googleapis/cloud/securitycenter/v1"
 )
 
 // listFindingsWithMarks prints findings that don't have a security mark
 // key_a equal to value_a to w.  sourceName is the full resource name
 // of the source to search for findings under.
 func listFindingsWithMarks(w io.Writer, sourceName string) error {
-	// sourceName := "organizations/111122222444/sources/1234"
+	// sourceName := "{parent}/sources/{sourceId}"
+	// where,
+	// Parent must be in one of the following formats:
+	//		"organizations/{orgId}"
+	//		"projects/{projectId}"
+	//		"folders/{folderId}"
 	// Instantiate a context and a security service client to make API calls.
 	ctx := context.Background()
 	client, err := securitycenter.NewClient(ctx)
 	if err != nil {
-		return fmt.Errorf("securitycenter.NewClient: %v", err)
+		return fmt.Errorf("securitycenter.NewClient: %w", err)
 	}
 	defer client.Close() // Closing the client safely cleans up background resources.
 
@@ -49,7 +54,7 @@ func listFindingsWithMarks(w io.Writer, sourceName string) error {
 			break
 		}
 		if err != nil {
-			return fmt.Errorf("it.Next: %v", err)
+			return fmt.Errorf("it.Next: %w", err)
 		}
 		finding := result.Finding
 		fmt.Fprintf(w, "Finding Name: %s, ", finding.Name)
