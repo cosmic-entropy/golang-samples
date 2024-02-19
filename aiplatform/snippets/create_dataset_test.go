@@ -40,25 +40,25 @@ func TestCreateDataset(t *testing.T) {
 
 	got := buf.String()
 	log.Println(got)
-	if !strings.Contains(got, "Created dataset: ") {
-		t.Errorf("createDataset: wanted 'Create dataset, got %s'", got)
+	if !strings.Contains(got, "Created dataset ") {
+		t.Errorf("createDataset: wanted 'Created dataset ', got '%s'", got)
 	}
 
 	output := got
-	teardown(output, t)
+	teardownCreateDataset(output, t)
 }
 
-func teardown(output string, t *testing.T) {
+func teardownCreateDataset(output string, t *testing.T) {
 	t.Helper()
 
 	// parse dataset name--we cannot predict the dataset ID at creation time.
-	tmp := strings.Split(output, "\n")
-	if len(tmp) < 1 {
+	_, tmp, ok := strings.Cut(output, "\n")
+	if !ok {
 		log.Println("couldn't parse dataset resource name")
 		return
 	}
 
-	datasetName := tmp[1]
+	datasetName := tmp
 	log.Println(datasetName)
 
 	apiEndpoint := fmt.Sprintf("%s-aiplatform.googleapis.com:443", region)

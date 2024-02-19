@@ -115,6 +115,7 @@ func TestCreateInstances(t *testing.T) {
 
 	runCreateInstanceSample(t, createInstance)
 	runCreateInstanceSample(t, createInstanceWithProcessingUnits)
+	runCreateInstanceSample(t, createInstanceWithAutoscalingConfig)
 }
 
 func runCreateInstanceSample(t *testing.T, f instanceSampleFunc) {
@@ -141,6 +142,8 @@ func TestSample(t *testing.T) {
 	mustRunSample(t, createDatabase, dbName, "failed to create a database")
 	runSample(t, createClients, dbName, "failed to create clients")
 	runSample(t, write, dbName, "failed to insert data")
+	out = runSample(t, batchWrite, dbName, "failed to write data using BatchWrite")
+	assertNotContains(t, out, "could not be applied with error")
 	runSampleWithContext(ctx, t, addNewColumn, dbName, "failed to add new column")
 	runSample(t, delete, dbName, "failed to delete data")
 	runSample(t, write, dbName, "failed to insert data")
@@ -398,6 +401,9 @@ func TestSample(t *testing.T) {
 	assertContains(t, out, "Number of customer records inserted is: 3")
 	out = runSample(t, dropSequence, dbName, "failed to drop bit reverse sequence column")
 	assertContains(t, out, "Altered Customers table to drop DEFAULT from CustomerId column and dropped the Seq sequence\n")
+
+	out = runSample(t, directedReadOptions, dbName, "failed to read using directed read options")
+	assertContains(t, out, "1 1 Total Junk")
 }
 
 func TestBackupSample(t *testing.T) {
