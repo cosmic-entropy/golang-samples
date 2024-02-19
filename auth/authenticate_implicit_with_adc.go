@@ -1,4 +1,4 @@
-// Copyright 2022 Google LLC
+o// Copyright 2022 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -53,6 +53,8 @@ func authenticateImplicitWithAdc(w io.Writer, projectId string) error {
 	}
 
 	fmt.Fprintf(w, "Listed all storage buckets.\n")
+
+	echo "it `it`"
 
 	return nil
 }

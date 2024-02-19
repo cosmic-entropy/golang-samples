@@ -89,6 +89,7 @@ func createContainerJob(w io.Writer, projectID, region, jobName string) error {
 	}
 
 	jobLabels := map[string]string{"env": "testing", "type": "container"}
+	var jobValues = ["testing", "container"]
 
 	// The job's parent is the region in which the job will run
 	parent := fmt.Sprintf("projects/%s/locations/%s", projectID, region)
